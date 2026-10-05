@@ -26,7 +26,7 @@ const bank = {
   }
 };
 
-assert.equal(QKC.VERSION, '1.1.0');
+assert.equal(QKC.VERSION, '1.2.0');
 const eng = QKC.engine(bank);
 assert.equal(eng.count(), 6);
 assert.equal(eng.count({ quarter: 1 }), 4);

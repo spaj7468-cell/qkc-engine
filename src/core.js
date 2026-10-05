@@ -6,7 +6,7 @@
 var QKC = (function () {
   'use strict';
 
-  var VERSION = '1.1.0';
+  var VERSION = '1.2.0';
 
   /* ── seeded PRNG (mulberry32) ─────────────────────────────── */
   function rng(seed) {
@@ -277,7 +277,8 @@ var QKC = (function () {
       tpq: +opts.timePerQuestion > 0 ? +opts.timePerQuestion : 30,
       title: opts.title != null ? String(opts.title) : 'QKC',
       shuffleOptions: opts.shuffleOptions !== false,
-      onFinish: typeof opts.onFinish === 'function' ? opts.onFinish : null
+      onFinish: typeof opts.onFinish === 'function' ? opts.onFinish : null,
+      onAnswer: typeof opts.onAnswer === 'function' ? opts.onAnswer : null
     };
 
     injectCSS(doc);
@@ -306,6 +307,22 @@ var QKC = (function () {
     }
 
     function check(v, it) { return norm(v) === norm(it.c); }
+
+    /* onAnswer({ id, value, correct, skipped, item }) — fires whenever an answer is graded:
+       normal → on "check"; sprint → on select/timeout; exam → once per item at finish. */
+    function fireAnswer(it, value) {
+      if (!st.onAnswer) return;
+      var empty = value == null || value === '';
+      try {
+        st.onAnswer({
+          id: it.id,
+          value: empty ? null : String(value),
+          correct: !empty && check(value, it),
+          skipped: empty,
+          item: { t: it.t, ty: it.ty, tp: it.tp || '' }
+        });
+      } catch (e) { /* user callback errors must not break the widget */ }
+    }
 
     function optLabel(it, v) { return it.ty === 'bool' ? (v === 'true' ? S('tTrue') : S('tFalse')) : v; }
 
@@ -460,11 +477,11 @@ var QKC = (function () {
       p.disabled = (v == null || v === '');
     }
 
-    function sprintTimeout() {
+    function sprintTimeout(it) {
       locked = true;
       stopTimer();
-      var it = test[idx];
       if (answers[it.id] == null) answers[it.id] = '';
+      fireAnswer(it, answers[it.id]);
       setTimeout(function () { advance(true); }, 600);
       live.textContent = S('timeout');
     }
@@ -482,6 +499,7 @@ var QKC = (function () {
       if (act === 'check') {
         locked = true;
         stopTimer();
+        fireAnswer(it, answers[it.id]);
         render();
         return;
       }
@@ -505,6 +523,9 @@ var QKC = (function () {
     function finish() {
       stopTimer();
       finished = true;
+      if (st.mode === 'exam') {
+        test.forEach(function (it) { fireAnswer(it, answers[it.id]); });
+      }
       result = scoreIt();
       render();
       if (st.onFinish) { try { st.onFinish(result); } catch (e) { /* user callback errors must not break widget */ } }
@@ -589,6 +610,7 @@ var QKC = (function () {
             btns[bi].setAttribute('aria-checked', btns[bi].getAttribute('data-val') === v ? 'true' : 'false');
             btns[bi].disabled = true;
           }
+          fireAnswer(it, v);
           setTimeout(function () { advance(false); }, 240);
           return;
         }
@@ -616,6 +638,7 @@ var QKC = (function () {
       if (o.seed !== undefined) st.seed = o.seed;
       if (o.timePerQuestion !== undefined) st.tpq = +o.timePerQuestion > 0 ? +o.timePerQuestion : 30;
       if (o.onFinish !== undefined) st.onFinish = typeof o.onFinish === 'function' ? o.onFinish : null;
+      if (o.onAnswer !== undefined) st.onAnswer = typeof o.onAnswer === 'function' ? o.onAnswer : null;
     }
 
     var api = {

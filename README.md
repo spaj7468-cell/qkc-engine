@@ -2,7 +2,7 @@
 
 **Dependency-free quiz engine for the web.** Vanilla JS. No build step. MIT. Embed quizzes in any page.
 
-[![version](https://img.shields.io/badge/version-1.1.0-black)](https://github.com/spaj7468-cell/qkc-engine/releases)
+[![version](https://img.shields.io/badge/version-1.2.0-black)](https://github.com/spaj7468-cell/qkc-engine/releases)
 [![deps](https://img.shields.io/badge/dependencies-0-black)](https://github.com/spaj7468-cell/qkc-engine/blob/main/package.json)
 [![license](https://img.shields.io/badge/license-MIT-black)](./LICENSE)
 
@@ -12,10 +12,24 @@
 1. **Headless core** — seeded, reproducible quiz assembly and scoring over strictly partitioned
    question banks (`grade → subject → quarter → topic`).
 2. **`QKC.init()`** — a tiny embeddable widget (own scoped CSS injected at runtime):
-   3 modes (`normal` / `exam` / `sprint`), 3 themes (`bw` / `light` / `dark`), RU/EN UI, a11y-complete.
+   3 modes (`normal` / `exam` / `sprint`), 3 themes (`bw` / `light` / `dark`), RU/EN UI, a11y-complete,
+   `onFinish(result)` and `onAnswer(ev)` event callbacks.
 
-Live docs + playground: **[qkc.js.org](https://qkc.js.org)** (pending) ·
+Live docs, API reference, REPL & playground: **[qkc.js.org](https://qkc.js.org)** (js.org PR
+[#12650](https://github.com/js-org/js.org/pull/12650), pending) ·
 [mirror](https://spaj7468-cell.github.io/qkc-engine/)
+
+### Docs map (on the site)
+
+| § | content |
+|---|---|
+| 01–02 | quick start · live demo with event console |
+| 03 | **API reference** — every option/field/return shape + in-page REPL |
+| 04–07 | bank format & validation · question types · modes · themes & CSS variables |
+| 08–09 | playground (paste your bank) · embedding: plain/React/Vue/web component/Node |
+| 10 | architecture — module map, data flow, widget anatomy, call-by-call narrative |
+| 11–13 | recipes · testing & quality · install & npm |
+| 14–17 | FAQ · changelog · license · the trainer built on this engine |
 
 ## Quick start
 
@@ -48,8 +62,9 @@ QKC.init({
   count: 10,
   seed: 'spring-2026',          // same seed → same quiz
   onFinish: r => console.log(r.pct, r.perTopic),
+  onAnswer: a => console.log(a.id, a.correct),   // new in 1.2.0
 });
-// → { root, restart(o?), update(o?), destroy(), results() }
+// → { root, mount, restart(o?), update(o?), destroy(), results() }
 ```
 
 ## Bank format

@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.2.0 — 2026-10-05
+- **`onAnswer(ev)` callback** — per-answer events `{ id, value, correct, skipped, item }`. Fires when an answer
+  is graded: normal → on check, sprint → on select/timeout, exam → once per item at finish. Additive; nothing removed.
+- **`sprintTimeout` hardening** — the timed-out question is passed explicitly; no reliance on render-time closure.
+- **Docs site v2 (qkc.js.org)** — full library documentation in the npm-package style:
+  - complete API reference: every `QKC.init()` option, instance member, result/test object shape,
+    `engine()` methods and standalone helpers, each with defaults and semantics;
+  - in-page **REPL** evaluating against the real build and the real bank excerpt;
+  - live **event console** wired to `onAnswer`/`onFinish`/`update`;
+  - question-type gallery (choice/bool/input) and theme gallery (bw/light/dark) — six live one-question widgets;
+  - five monochrome SVG diagrams: bank container tree, mode flows, module map, data flow, widget anatomy;
+  - call-by-call architecture narrative, size budget, design-decision cards;
+  - recipes (strip answers, localStorage, fetch banks, exam seeds, telemetry, CI grading);
+  - testing & quality section, install matrix, 12-item FAQ, rendered changelog;
+  - interface: site themes dark/light/b/w (persisted), sticky TOC with scroll-spy + filter,
+    mobile drawer, scroll progress, back-to-top, responsive 320–1920, `prefers-reduced-motion` respected.
+
 ## 1.1.0 — 2026-10-05
 - **`QKC.init()` — embeddable quiz widget.** One call renders a full quiz into any element:
   question flow, options/bool/input types, explanations, progress bar, result screen with

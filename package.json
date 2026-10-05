@@ -1,7 +1,7 @@
 {
   "name": "qkc-engine",
-  "version": "1.1.0",
-  "description": "Dependency-free JavaScript quiz engine: assemble, score and embed knowledge-check quizzes. QKC.init() renders a themeable widget (normal/exam/sprint, light/dark/bw, RU/EN) with zero dependencies. UMD + ESM, MIT.",
+  "version": "1.2.0",
+  "description": "Dependency-free JavaScript quiz engine: seeded test assembly, scoring, validation and an embeddable QKC.init() widget (normal/exam/sprint, bw/light/dark, RU/EN, onAnswer/onFinish events). Zero dependencies, UMD + ESM, MIT.",
   "main": "dist/qkc-engine.js",
   "module": "dist/qkc-engine.mjs",
   "exports": {

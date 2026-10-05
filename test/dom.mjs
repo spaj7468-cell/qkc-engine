@@ -151,5 +151,37 @@ assert.ok(root().querySelector('.qkc-pct'));
 tapAct('restart');
 assert.ok(root().querySelector('.qkc-t'), 'restart returns to questions');
 
+/* ── onAnswer callback: normal (per check), exam (at finish, incl. skipped), sprint (silent grading) ── */
+{
+  const log = [];
+  QKC.init({ bank: [bank[0]], el: '#quiz', lang: 'en', seed: 9, mode: 'normal',
+    onAnswer: a => log.push(a) });
+  tap([...root().querySelectorAll('.qkc-opt')].find(b => b.getAttribute('data-val') === '3'));
+  tapAct('check');
+  assert.equal(log.length, 1, 'normal: onAnswer fires on check');
+  assert.equal(log[0].correct, false);
+  assert.equal(log[0].value, '3');
+  assert.equal(log[0].item.t, '2 + 2 = ?');
+  assert.equal(log[0].skipped, false);
+
+  const exLog = [];
+  QKC.init({ bank, el: '#quiz', lang: 'en', seed: 11, mode: 'exam',
+    onAnswer: a => exLog.push(a) });
+  answerCurrent();                     /* only q1 answered */
+  assert.equal(exLog.length, 0, 'exam: nothing fires before finish');
+  tapAct('next'); tapAct('next'); tapAct('finish');
+  assert.equal(exLog.length, 3, 'exam: fires once per item at finish');
+  assert.equal(exLog.filter(a => a.skipped).length, 2, 'exam: unanswered → skipped');
+  assert.equal(exLog.filter(a => a.correct).length, 1, 'exam: answered one graded correct');
+
+  const spLog = [];
+  QKC.init({ bank: [bank[0]], el: '#quiz', lang: 'en', seed: 12, mode: 'sprint',
+    timePerQuestion: 60, onAnswer: a => spLog.push(a) });
+  tap([...root().querySelectorAll('.qkc-opt')].find(b => b.getAttribute('data-val') === '4'));
+  assert.equal(spLog.length, 1, 'sprint: fires on select');
+  assert.equal(spLog[0].correct, true);
+  assert.ok(!root().querySelector('.qkc-fb'), 'sprint: still no reveal in UI');
+}
+
 console.log('all DOM tests passed ✓');
 process.exit(0);

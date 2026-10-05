@@ -1,81 +1,165 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>QKC Engine — dependency-free quiz engine for the web</title>
-<meta name="description" content="QKC Engine: vanilla-JS quiz engine with no build step and no dependencies. QKC.init() embeds a themeable quiz widget (normal/exam/sprint, bw/light/dark, RU/EN) in any page. UMD + ESM, npm, MIT.">
-<meta name="color-scheme" content="dark">
+<title>QKC Engine — dependency-free JavaScript quiz engine · docs, API, playground</title>
+<meta name="description" content="QKC Engine: vanilla-JS quiz engine with no build step and no dependencies. QKC.init() embeds a themeable quiz widget (normal/exam/sprint, bw/light/dark, RU/EN) in any page. Full API reference, headless build/score, bank schema, live REPL and playground. UMD + ESM, npm, MIT.">
+<meta name="color-scheme" content="dark light">
+<meta property="og:title" content="QKC Engine — dependency-free JavaScript quiz engine">
+<meta property="og:description" content="Vanilla JS. No build step. MIT. Embed quizzes in any page: QKC.init() widget + headless build/score API. Docs, REPL, playground.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://spaj7468-cell.github.io/qkc-engine/">
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='2' width='29' height='29' rx='8' fill='none' stroke='%23fff' stroke-width='2.4'/%3E%3Ctext x='16' y='21' font-family='monospace' font-size='12' fill='%23fff' text-anchor='middle'%3E%7B%7D%3C/text%3E%3C/svg%3E">
+<script>
+  /* apply saved site theme before first paint (no FOUC) */
+  (function () {
+    try {
+      var t = localStorage.getItem('qkc-docs-theme');
+      if (t === 'light' || t === 'bw' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) { /* private mode — stay dark */ }
+  })();
+</script>
 <script defer src="demo-bank.js"></script>
 <script defer src="dist/qkc-engine.js"></script>
 <script defer src="site.js"></script>
 </head>
 <body>
+<div id="progress" aria-hidden="true"></div>
 <div class="grid-overlay" aria-hidden="true"></div>
 <div class="grain" aria-hidden="true"></div>
+<a class="skip" href="#quickstart">Skip to content</a>
 
 <header class="nav">
   <div class="nav__in">
     <a class="brand" href="#top"><span class="brand__box">{}</span> QKC <em>engine</em></a>
-    <nav class="nav__links" aria-label="Sections">
-      <a href="#quickstart">Quick start</a>
+    <nav class="nav__links" aria-label="Main sections">
+      <a href="#api">API</a>
       <a href="#demo">Demo</a>
-      <a href="#playground">Playground</a>
       <a href="#format">Bank format</a>
-      <a href="#embed">Embed</a>
       <a href="#architecture">Architecture</a>
-      <a href="#npm">npm</a>
+      <a href="#recipes">Recipes</a>
+      <a href="#faq">FAQ</a>
     </nav>
-    <a class="gh" href="https://github.com/spaj7468-cell/qkc-engine" rel="noopener">
-      <svg viewBox="0 0 16 16" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
-      <span>GitHub</span>
-    </a>
+    <div class="nav__tools">
+      <div class="seg" id="siteTheme" role="group" aria-label="Site theme">
+        <button type="button" data-v="dark" class="on" title="Dark theme">dark</button>
+        <button type="button" data-v="light" title="Light theme">light</button>
+        <button type="button" data-v="bw" title="Strict black/white theme">b/w</button>
+      </div>
+      <a class="gh" href="https://github.com/spaj7468-cell/qkc-engine" rel="noopener">
+        <svg viewBox="0 0 16 16" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        <span>GitHub</span>
+      </a>
+      <button class="burger" id="menuBtn" type="button" aria-expanded="false" aria-controls="drawer" aria-label="Open menu"><i></i><i></i><i></i></button>
+    </div>
   </div>
 </header>
+
+<nav class="drawer" id="drawer" aria-label="All sections">
+  <div class="drawer__tools">
+    <span class="sw__k">theme</span>
+    <div class="seg" id="siteThemeM" role="group" aria-label="Site theme">
+      <button type="button" data-v="dark" class="on">dark</button>
+      <button type="button" data-v="light">light</button>
+      <button type="button" data-v="bw">b/w</button>
+    </div>
+  </div>
+  <a href="#quickstart"><span class="n">01</span> Quick start</a>
+  <a href="#demo"><span class="n">02</span> Live demo</a>
+  <a href="#api"><span class="n">03</span> API reference</a>
+  <a href="#format"><span class="n">04</span> Bank format</a>
+  <a href="#types"><span class="n">05</span> Question types</a>
+  <a href="#modes"><span class="n">06</span> Modes</a>
+  <a href="#themes"><span class="n">07</span> Themes &amp; CSS</a>
+  <a href="#playground"><span class="n">08</span> Playground</a>
+  <a href="#embed"><span class="n">09</span> Embedding</a>
+  <a href="#architecture"><span class="n">10</span> Architecture</a>
+  <a href="#recipes"><span class="n">11</span> Recipes</a>
+  <a href="#quality"><span class="n">12</span> Testing &amp; quality</a>
+  <a href="#install"><span class="n">13</span> Install &amp; npm</a>
+  <a href="#faq"><span class="n">14</span> FAQ</a>
+  <a href="#changelog"><span class="n">15</span> Changelog</a>
+  <a href="#license"><span class="n">16</span> License &amp; source</a>
+  <a href="#trainer"><span class="n">17</span> Built with QKC</a>
+</nav>
 
 <main id="top">
 
   <!-- ═══ HERO ═══ -->
   <div class="wrap hero">
     <div class="hero__txt">
-      <span class="kicker">OuRi Corp · open source · MIT</span>
+      <span class="kicker">OuRi Corp · open source · MIT · BETA</span>
       <h1>QKC Engine — <span class="out">dependency-free</span> quiz engine for the web</h1>
-      <p class="hero__sub">Vanilla JS. No build step. MIT. Embed quizzes in any page.</p>
+      <p class="hero__sub">Vanilla JS. No build step. One <code>&lt;script&gt;</code> tag.
+        <code>QKC.init()</code> embeds a full quiz widget in any page; <code>QKC.engine()</code> gives you
+        the same brain headless — seeded assembly, scoring, validation.</p>
       <div class="badges">
-        <span class="badge badge--ink">v1.1.0</span>
+        <span class="badge badge--ink">v1.2.0</span>
         <span class="badge">0 dependencies</span>
         <span class="badge">UMD + ESM</span>
-        <span class="badge">8.5 KB gzip</span>
+        <span class="badge">8.8 KB gzip</span>
         <span class="badge">RU / EN</span>
-        <span class="badge">3 modes · 3 themes</span>
+        <span class="badge">3 modes × 3 themes</span>
+        <span class="badge">MIT</span>
       </div>
       <div class="acts hero__acts">
         <a class="btn btn--primary" href="#quickstart">Quick start ↓</a>
-        <a class="btn" href="https://github.com/spaj7468-cell/qkc-engine" rel="noopener">View on GitHub</a>
+        <a class="btn" href="#api">API reference</a>
+        <a class="btn btn--ghost" href="https://github.com/spaj7468-cell/qkc-engine" rel="noopener">View on GitHub</a>
+      </div>
+      <div class="stats" aria-label="Key numbers">
+        <div class="stat"><b data-count="42823">42 823</b><span>questions in the largest bank running on it</span></div>
+        <div class="stat"><b data-count="811">811</b><span>JavaScript questions in the QKC curriculum</span></div>
+        <div class="stat"><b data-count="8.8" data-dec="1" data-suffix=" KB">8.8 KB</b><span>gzip: engine + widget + injected CSS</span></div>
+        <div class="stat"><b data-count="0">0</b><span>runtime dependencies, network calls, trackers</span></div>
       </div>
     </div>
     <div class="hero__demo">
-      <div class="pane-label mono">live widget · rendered by QKC.init()</div>
+      <span class="pane-label mono">live widget · rendered right now by QKC.init()</span>
       <div id="hero-quiz"></div>
     </div>
   </div>
 
+  <div class="layout">
+    <aside class="toc" id="tocBox" aria-label="Table of contents">
+      <div class="toc__t">On this page</div>
+      <input id="tocFilter" type="search" placeholder="filter sections…" aria-label="Filter sections">
+      <a href="#quickstart"><span class="n">01</span> Quick start</a>
+      <a href="#demo"><span class="n">02</span> Live demo</a>
+      <a href="#api"><span class="n">03</span> API reference</a>
+      <a href="#format"><span class="n">04</span> Bank format</a>
+      <a href="#types"><span class="n">05</span> Question types</a>
+      <a href="#modes"><span class="n">06</span> Modes</a>
+      <a href="#themes"><span class="n">07</span> Themes &amp; CSS</a>
+      <a href="#playground"><span class="n">08</span> Playground</a>
+      <a href="#embed"><span class="n">09</span> Embedding</a>
+      <a href="#architecture"><span class="n">10</span> Architecture</a>
+      <a href="#recipes"><span class="n">11</span> Recipes</a>
+      <a href="#quality"><span class="n">12</span> Testing &amp; quality</a>
+      <a href="#install"><span class="n">13</span> Install &amp; npm</a>
+      <a href="#faq"><span class="n">14</span> FAQ</a>
+      <a href="#changelog"><span class="n">15</span> Changelog</a>
+      <a href="#license"><span class="n">16</span> License &amp; source</a>
+      <a href="#trainer"><span class="n">17</span> Built with QKC</a>
+    </aside>
+
+    <div class="content">
+
   <!-- ═══ 01 QUICK START ═══ -->
   <section id="quickstart">
-    <div class="wrap">
       <span class="kicker">01 · quick start</span>
       <h2>Two tags and one call.</h2>
       <p class="sec-sub">Drop the script into any page and point <code>QKC.init()</code> at a question bank.
-        The widget brings its own CSS — nothing else to install, nothing to build.</p>
+        The widget brings its own CSS — nothing else to install, nothing to build, nothing to configure.</p>
       <div class="split">
         <div class="pane">
           <h3>index.html</h3>
-          <div class="code" id="code-quick"><i>&lt;!-- 1. the engine (UMD, ~8.5 KB gzip) --&gt;</i>
+          <div class="code" id="code-quick"><i>&lt;!-- 1. the engine (UMD, 8.8 KB gzip) --&gt;</i>
 &lt;<b>script</b> src="https://qkc.js.org/engine.js"&gt;&lt;/<b>script</b>&gt;
 
-<i>&lt;!-- 2. your bank, e.g. a school question bank --&gt;</i>
+<i>&lt;!-- 2. your bank — any array of questions --&gt;</i>
 &lt;<b>script</b> src="bank-7.js"&gt;&lt;/<b>script</b>&gt;
 
 &lt;<b>div</b> id="quiz"&gt;&lt;/<b>div</b>&gt;
@@ -83,31 +167,36 @@
 &lt;<b>script</b>&gt;
   <b>QKC.init</b>({ bank: window.OURI_BANKS[7].algebra[1] });
 &lt;/<b>script</b>&gt;</div>
-          <button class="copy" data-copy="code-quick-raw" type="button">copy</button>
+          <button class="copy" data-copy="code-quick" type="button">copy</button>
         </div>
         <div class="pane">
           <h3>result — live, on this page</h3>
           <p class="pane-note">The snippet is real: <code>demo-bank.js</code> on this page defines
             <code>OURI_BANKS[7].algebra[1]</code> — an actual excerpt (9 questions) from the grade-7 algebra
-            bank of the QKC trainer. That call renders this:</p>
+            bank of the QKC trainer. That exact call renders this:</p>
           <div id="qs-quiz"></div>
         </div>
       </div>
-    </div>
+      <div class="steps" aria-label="What happens under the hood">
+        <div class="step"><div><b>Load</b><span>One UMD file defines the global <code>QKC</code> (or import it as ESM/CJS). No CSS file, no fonts, no network calls.</span></div></div>
+        <div class="step"><div><b>Call <code>QKC.init({ bank, el })</code></b><span>The bank is flattened, validated, and a seeded PRNG picks <code>count</code> questions and shuffles their options.</span></div></div>
+        <div class="step"><div><b>Play</b><span>The widget renders questions, checks answers, shows explanations — mode decides the flow (<code>normal</code>/<code>exam</code>/<code>sprint</code>).</span></div></div>
+        <div class="step"><div><b>Get results</b><span><code>onFinish(result)</code> hands you <code>{ pct, correct, wrong, skip, perTopic, seed, mode }</code>. Store it, chart it, ignore it — the engine never phones home.</span></div></div>
+      </div>
   </section>
 
   <!-- ═══ 02 LIVE DEMO ═══ -->
   <section id="demo">
-    <div class="wrap">
       <span class="kicker">02 · live demo</span>
-      <h2>This is what a quiz assembled by the engine looks like.</h2>
+      <h2>The widget, wired to a live event console.</h2>
       <p class="sec-sub">Not a knowledge test for you — a capability demo. Flip the switches like in a dev-tools
         panel: the code on the left and the widget on the right stay in sync, because the widget
-        <em>is</em> that exact call re-run.</p>
+        <em>is</em> that exact call re-run. Every <code>update()</code>, <code>onAnswer</code> and
+        <code>onFinish</code> event is printed to the console below — finish the quiz and watch the result object arrive.</p>
 
       <div class="switches" role="group" aria-label="Engine options">
         <div class="sw">
-          <span class="sw__k mono">mode</span>
+          <span class="sw__k">mode</span>
           <div class="seg" id="segMode">
             <button type="button" data-v="normal" class="on">normal</button>
             <button type="button" data-v="exam">exam</button>
@@ -115,7 +204,7 @@
           </div>
         </div>
         <div class="sw">
-          <span class="sw__k mono">theme</span>
+          <span class="sw__k">theme</span>
           <div class="seg" id="segTheme">
             <button type="button" data-v="bw" class="on">b/w</button>
             <button type="button" data-v="light">light</button>
@@ -123,7 +212,7 @@
           </div>
         </div>
         <div class="sw">
-          <span class="sw__k mono">lang</span>
+          <span class="sw__k">lang</span>
           <div class="seg" id="segLang">
             <button type="button" data-v="ru" class="on">RU</button>
             <button type="button" data-v="en">EN</button>
@@ -133,7 +222,7 @@
 
       <div class="split">
         <div class="pane">
-          <h3>code</h3>
+          <h3>code — exactly what runs</h3>
           <div class="code" id="demoCode"></div>
           <button class="copy" data-copy="demoCode" type="button">copy</button>
         </div>
@@ -142,42 +231,468 @@
           <div id="demo-quiz"></div>
         </div>
       </div>
-    </div>
+
+      <div class="console" aria-label="Live engine events">
+        <div class="console__h"><span class="dot" aria-hidden="true"></span> engine events · onAnswer / onFinish / update
+          <button type="button" id="logClear">clear</button></div>
+        <ul id="logList"><li class="empty">// events will appear here — answer a question in the widget</li></ul>
+      </div>
   </section>
 
-  <!-- ═══ 03 PLAYGROUND ═══ -->
+  <!-- ═══ 03 API REFERENCE ═══ -->
+  <section id="api">
+      <span class="kicker">03 · api reference</span>
+      <h2>Every function, every option, every field.</h2>
+      <p class="sec-sub">The whole public surface is one global object <code>QKC</code> (default export in ESM/CJS).
+        Two layers: <code>QKC.init()</code> — the embeddable widget; <code>QKC.engine()</code> — the headless core.
+        Everything is synchronous and pure: same input + same seed → same output.</p>
+
+      <h3 class="sub-h"><code>QKC.init(options) → instance</code></h3>
+      <p class="prose">Mounts a quiz widget. Injects its scoped CSS (<code>&lt;style id="qkc-engine-css"&gt;</code>) once per document,
+        clears the mount point, builds a seeded test from the bank and renders question one.</p>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>option</th><th>type</th><th>default</th><th>description</th></tr></thead>
+        <tbody>
+          <tr><td><code>bank</code></td><td>array | object</td><td><span class="def">required</span></td><td>Questions: a flat array of items, <code>{ items: [...] }</code>, or the nested container <code>{ grade: { subject: { quarter: [...] } } }</code> — anything <code>QKC.toArray()</code> accepts.</td></tr>
+          <tr><td><code>el</code></td><td>string | Element</td><td><span class="def">appended to body</span></td><td>Mount point: CSS selector or DOM node. Its content is cleared. If omitted (or not found), a new <code>&lt;div&gt;</code> is appended to <code>body</code>.</td></tr>
+          <tr><td><code>count</code></td><td>number</td><td><span class="def">10</span></td><td>How many questions to pick (min 1, capped at bank length).</td></tr>
+          <tr><td><code>seed</code></td><td>string | number</td><td><span class="def">time-based</span></td><td>PRNG seed. Strings are hashed with FNV-1a. Same seed + bank + count → identical quiz down to option order.</td></tr>
+          <tr><td><code>mode</code></td><td>'normal' | 'exam' | 'sprint'</td><td><span class="def">'normal'</span></td><td>Flow of the quiz — see <a href="#modes">§06 Modes</a>. Invalid values fall back to <code>'normal'</code>.</td></tr>
+          <tr><td><code>theme</code></td><td>'bw' | 'light' | 'dark'</td><td><span class="def">'bw'</span></td><td>Widget color scheme via <code>data-theme</code> + CSS variables — see <a href="#themes">§07 Themes</a>.</td></tr>
+          <tr><td><code>lang</code></td><td>'ru' | 'en'</td><td><span class="def">autodetect</span></td><td>UI language. Autodetect: <code>&lt;html lang&gt;</code> → <code>navigator.language</code> → <code>'en'</code>.</td></tr>
+          <tr><td><code>timePerQuestion</code></td><td>number (sec)</td><td><span class="def">30</span></td><td>Sprint countdown per question. On timeout the question is auto-advanced and counted as skipped.</td></tr>
+          <tr><td><code>title</code></td><td>string</td><td><span class="def">'QKC'</span></td><td>Header title inside the widget.</td></tr>
+          <tr><td><code>shuffleOptions</code></td><td>boolean</td><td><span class="def">true</span></td><td>Shuffle <code>choice</code> options (deterministically, from the seed). Set <code>false</code> to keep bank order.</td></tr>
+          <tr><td><code>onFinish</code></td><td>(result) =&gt; void</td><td><span class="def">null</span></td><td>Fires when the quiz finishes, with the full result object (below). Exceptions inside are caught — a broken callback can't break the widget.</td></tr>
+          <tr><td><code>onAnswer</code></td><td>(ev) =&gt; void</td><td><span class="def">null</span></td><td><b>New in 1.2.0.</b> Fires whenever an answer is graded: normal → on “check”; sprint → on select/timeout; exam → once per item at finish. <code>ev = { id, value, correct, skipped, item: { t, ty, tp } }</code>.</td></tr>
+          <tr><td><code>document</code></td><td>Document</td><td><span class="def">global</span></td><td>Document to render into — for jsdom/tests or multi-window setups.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3 class="sub-h">instance — what <code>init()</code> returns</h3>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>member</th><th>type</th><th>description</th></tr></thead>
+        <tbody>
+          <tr><td><code>root</code></td><td>HTMLElement</td><td>The <code>.qkc-root</code> node — style it, measure it, query inside it.</td></tr>
+          <tr><td><code>mount</code></td><td>HTMLElement</td><td>The resolved mount point (<code>el</code> or the created div).</td></tr>
+          <tr><td><code>restart(o?)</code></td><td>() → instance</td><td>Apply options (optional) and start over: question 1, empty answers, fresh seeded build.</td></tr>
+          <tr><td><code>update(o?)</code></td><td>() → instance</td><td>Apply options live — <code>bank, mode, theme, lang, title, count, seed, timePerQuestion, onFinish, onAnswer</code> — and re-render. This is how the demo switches above work.</td></tr>
+          <tr><td><code>destroy()</code></td><td>() → void</td><td>Stop timers; clear the mount (or remove it if the engine created it).</td></tr>
+          <tr><td><code>results()</code></td><td>() → result | null</td><td>The result of the current/last finished run — or a live score of the current attempt; <code>null</code> before any question is built.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3 class="sub-h">result object — <code>onFinish(r)</code> / <code>instance.results()</code></h3>
+      <div class="split">
+        <div class="pane">
+          <h3>shape</h3>
+          <div class="code" id="code-result">{
+  <b>correct</b>:  7,          <i>// graded right</i>
+  <b>wrong</b>:    2,          <i>// graded wrong</i>
+  <b>skip</b>:     1,          <i>// left empty</i>
+  <b>total</b>:   10,
+  <b>pct</b>:      70,         <i>// Math.round(correct/total*100)</i>
+  <b>perTopic</b>: {          <i>// per-topic breakdown</i>
+    'Многочлены': { correct: 3, total: 4 },
+    'Одночлены':  { correct: 2, total: 3 },
+    …
+  },
+  <b>seed</b>:  'spring-2026', <i>// the seed this run was built with</i>
+  <b>mode</b>:  'normal'
+}</div>
+          <button class="copy" data-copy="code-result" type="button">copy</button>
+        </div>
+        <div class="pane">
+          <h3>grading rule</h3>
+          <p class="pane-note">An answer is compared to <code>c</code> through <code>QKC.norm()</code>:
+            <b>trim → lowercase → collapse whitespace → comma becomes dot</b>, then exact string equality.
+            So <code>' Paris '</code> = <code>'paris'</code>, and <code>'3,5'</code> = <code>'3.5'</code>.
+            Nothing fuzzier than that — grading is deterministic and auditable. Empty/<code>null</code> → skipped.</p>
+          <p class="pane-note">Per-topic stats come from the <code>tp</code> field; items without a topic land under
+            <code>'—'</code> internally and are omitted from the widget's topic table.</p>
+        </div>
+      </div>
+
+      <h3 class="sub-h"><code>QKC.engine(bank) → eng</code> — the headless core</h3>
+      <p class="prose">No DOM, no widget — build tests and score answers yourself (custom UI, server-side grading, Node scripts, generators).</p>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>method</th><th>returns</th><th>description</th></tr></thead>
+        <tbody>
+          <tr><td><code>eng.build(opts?)</code></td><td>test</td><td>Assemble a test: filter the bank, seed the PRNG, shuffle, pick <code>count</code> items, shuffle each choice's options. <code>opts = { grade, subject, quarter, topics[], count=10, seed }</code> — <code>quarter</code> accepts a number or <code>'all'</code>.</td></tr>
+          <tr><td><code>eng.score(test, answers)</code></td><td>result</td><td>Grade <code>answers = { [itemId]: value }</code> against the test. Same <code>norm()</code> rule and result shape as the widget.</td></tr>
+          <tr><td><code>eng.validate()</code></td><td>{ ok, errors[] }</td><td>Structural audit of the whole bank (see rules in <a href="#format">§04</a>).</td></tr>
+          <tr><td><code>eng.count(filter?)</code></td><td>number</td><td>How many items match the filter.</td></tr>
+          <tr><td><code>eng.topics(filter?)</code></td><td>[{ topic, count }]</td><td>Topic histogram, sorted by topic name.</td></tr>
+          <tr><td><code>eng.bank</code></td><td>bank</td><td>The bank it was created with.</td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="split">
+        <div class="pane">
+          <h3>test object — what build() returns</h3>
+          <div class="code" id="code-test">{
+  <b>seed</b>: 'spring-2026',
+  <b>filter</b>: { grade: 7, subject: 'algebra',
+            quarter: 1, topics: [] },
+  <b>items</b>: [{
+    <b>id</b>: 0,            <i>// index — the key in answers</i>
+    <b>t</b>: 'Раскрой скобки: (x+10)(x+7)',
+    <b>ty</b>: 'choice',
+    <b>o</b>: ['x²+17x+70', …], <i>// shuffled</i>
+    <b>c</b>: 'x² + 17x + 70',  <i>// ⚠ strip before clients</i>
+    <b>e</b>: 'По формуле (x+p)(x+q)…',
+    <b>tp</b>: 'Многочлены',
+    <b>q</b>: 1, <b>grade</b>: 7, <b>subject</b>: 'algebra'
+  }, …]
+}</div>
+          <button class="copy" data-copy="code-test" type="button">copy</button>
+        </div>
+        <div class="pane">
+          <h3>typical headless flow</h3>
+          <div class="code" id="code-headless"><b>const</b> eng  = QKC.engine(OURI_BANKS);
+<b>const</b> v    = eng.validate();          <i>// { ok, errors[] }</i>
+
+<b>const</b> test = eng.build({
+  grade: 7, subject: 'algebra', quarter: 1,
+  count: 10, seed: 'spring-2026'
+});
+
+<i>// send to a client WITHOUT answers:</i>
+<b>const</b> safe = test.items.map(({ c, ...i }) =&gt; i);
+
+<i>// …collect answers {0:'x²+17x+70', 1:'20x³', …}</i>
+<b>const</b> res = eng.score(test, answers);
+res.pct;      <i>// 0..100</i>
+res.perTopic; <i>// { 'Многочлены': {correct, total}, … }</i></div>
+          <button class="copy" data-copy="code-headless" type="button">copy</button>
+        </div>
+      </div>
+
+      <h3 class="sub-h">standalone helpers</h3>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>function</th><th>signature</th><th>description</th></tr></thead>
+        <tbody>
+          <tr><td><code>QKC.validate</code></td><td>(bank) → { ok, errors[] }</td><td>Works on arrays and containers; errors are human-readable strings with item indexes.</td></tr>
+          <tr><td><code>QKC.toArray</code></td><td>(bank) → item[]</td><td>Flatten array | <code>{items}</code> | container into a plain list (container items get <code>grade/subject/quarter</code> merged in).</td></tr>
+          <tr><td><code>QKC.items</code></td><td>(container, filter?) → item[]</td><td>Low-level traversal with the same filter object as <code>build()</code>.</td></tr>
+          <tr><td><code>QKC.rng</code></td><td>(seed:number) → { next, int, pick }</td><td>mulberry32 PRNG. <code>next()→[0,1)</code>, <code>int(n)→0..n-1</code>, <code>pick(arr)</code>.</td></tr>
+          <tr><td><code>QKC.hashSeed</code></td><td>(str) → uint32</td><td>FNV-1a string hash — turns <code>'spring-2026'</code> into a numeric seed.</td></tr>
+          <tr><td><code>QKC.norm</code></td><td>(v) → string</td><td>The answer normalizer (trim, lowercase, collapse spaces, <code>,</code>→<code>.</code>).</td></tr>
+          <tr><td><code>QKC.STR</code></td><td>{ en: {…}, ru: {…} }</td><td>The widget UI dictionaries (25 keys each) — reuse or fork them for your own UI.</td></tr>
+          <tr><td><code>QKC.VERSION</code></td><td>string</td><td>Semver of the build, e.g. <code>'1.2.0'</code>.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3 class="sub-h">Try it — real REPL, runs the real build</h3>
+      <p class="prose">The box below evaluates JavaScript against this page's <code>QKC</code> and the real
+        <code>OURI_BANKS</code> excerpt (grade 7 · algebra · quarter 1). End with an expression to see its value,
+        or use <code>console.log()</code>. Nothing leaves your browser.</p>
+      <div class="pane repl">
+        <textarea id="replSrc" spellcheck="false" aria-label="REPL input">QKC.engine(OURI_BANKS).topics({ subject: 'algebra' })</textarea>
+        <div class="repl__chips" aria-label="Examples">
+          <button type="button" data-repl="QKC.VERSION">VERSION</button>
+          <button type="button" data-repl="QKC.validate(OURI_BANKS[7].algebra[1])">validate(bank)</button>
+          <button type="button" data-repl="QKC.engine(OURI_BANKS).count({ grade: 7, subject: 'algebra', quarter: 1 })">count(filter)</button>
+          <button type="button" data-repl="QKC.engine(OURI_BANKS).topics({ subject: 'algebra' })">topics(filter)</button>
+          <button type="button" data-repl="(() => { const r = QKC.rng(QKC.hashSeed('spring-2026')); return [r.next(), r.int(10), r.pick(['a','b','c'])]; })()">rng(seed)</button>
+          <button type="button" data-repl="(() => { const eng = QKC.engine(OURI_BANKS); const test = eng.build({ grade:7, subject:'algebra', quarter:1, count:3, seed:'repl' }); const ans = {}; test.items.forEach(i => ans[i.id] = i.c); return { picked: test.items.map(i => i.t), score: eng.score(test, ans) }; })()">build → score</button>
+          <button type="button" data-repl="QKC.toArray(OURI_BANKS).map(i => i.tp)">all topics (flat)</button>
+        </div>
+        <div class="acts">
+          <button class="btn btn--primary btn--sm" id="replRun" type="button">run ▶ <span class="mono" style="opacity:.6">ctrl+↵</span></button>
+        </div>
+        <div class="repl__out" id="replOut" role="status" aria-live="polite"><span class="dim">// output appears here</span></div>
+      </div>
+  </section>
+
+  <!-- ═══ 04 BANK FORMAT ═══ -->
+  <section id="format">
+      <span class="kicker">04 · bank format</span>
+      <h2>A question is six fields. A bank is an array.</h2>
+      <p class="sec-sub">No DSL, no schema registry, no server. Plain JSON-serializable objects — the same format
+        the QKC trainer ships its 42 823 questions in. If you can <code>JSON.parse</code> it, the engine can play it.</p>
+
+      <div class="split">
+        <div class="pane">
+          <h3>one item, annotated</h3>
+          <div class="code" id="code-item">{
+  <b>"t"</b>:  "Раскрой скобки: (x + 10)(x + 7)",  <i>// question text</i>
+  <b>"ty"</b>: "choice",        <i>// 'choice' | 'bool' | 'input'</i>
+  <b>"o"</b>:  [                <i>// options — choice only, ≥ 2</i>
+    "x² + 17x + 70",
+    "x² + 10x + 7",
+    "x² + 70x + 17",
+    "x² − 17x + 70"
+  ],
+  <b>"c"</b>:  "x² + 17x + 70", <i>// correct answer (must be in o)</i>
+  <b>"e"</b>:  "По формуле (x+p)(x+q) = x² + (p+q)x + pq.", <i>// explanation</i>
+  <b>"tp"</b>: "Многочлены",     <i>// topic — filters + per-topic stats</i>
+  <b>"q"</b>:  1                <i>// optional: quarter inside a container</i>
+}</div>
+          <button class="copy" data-copy="code-item" type="button">copy</button>
+          <p class="pane-note" style="margin-top:12px">Real item #0 of <code>OURI_BANKS[7].algebra[1]</code> — the bank loaded on this page.</p>
+        </div>
+        <div class="pane">
+          <h3>fields</h3>
+          <div class="tbl-wrap" style="margin-top:0"><table>
+            <thead><tr><th>field</th><th>type</th><th>meaning</th></tr></thead>
+            <tbody>
+              <tr><td><code>t</code></td><td>string</td><td>Question text. Shown as-is (no HTML).</td></tr>
+              <tr><td><code>ty</code></td><td><code>'choice'</code> | <code>'bool'</code> | <code>'input'</code></td><td>Answer type — see <a href="#types">§05</a>.</td></tr>
+              <tr><td><code>o</code></td><td>string[]</td><td>Options. Required for <code>choice</code> (≥ 2, must contain <code>c</code>). Ignored otherwise; <code>bool</code> auto-renders True/False.</td></tr>
+              <tr><td><code>c</code></td><td>string</td><td>Correct answer, compared via <code>norm()</code> (trim / case / whitespace / <code>,</code>→<code>.</code>). For <code>bool</code>: <code>'true'</code> or <code>'false'</code>.</td></tr>
+              <tr><td><code>e</code></td><td>string</td><td>Explanation shown after checking (normal mode) — optional but your users will thank you.</td></tr>
+              <tr><td><code>tp</code></td><td>string</td><td>Topic. Drives <code>topics()</code>, the <code>topics</code> filter and per-topic stats.</td></tr>
+              <tr><td><code>q</code></td><td>number?</td><td>Quarter/term index when items live in a container.</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <h3 class="sub-h">Three shapes of a bank</h3>
+      <div class="cols3">
+        <div class="card"><h3>flat array</h3><p>The simplest: <code>[item, item, …]</code>. Exactly what the playground and most embeds use.</p><span class="sig">QKC.init({ bank: [ … ] })</span></div>
+        <div class="card"><h3>{ items: [...] }</h3><p>An object wrapper — handy when a bank file also carries meta (<code>title</code>, <code>version</code>, …); the engine reads <code>.items</code>.</p><span class="sig">QKC.init({ bank: { items: [ … ] } })</span></div>
+        <div class="card"><h3>nested container</h3><p><code>{ grade: { subject: { quarter: [items] } } }</code> — the QKC trainer shape. <code>build()</code> filters slice it by grade/subject/quarter/topic.</p><span class="sig">QKC.init({ bank: OURI_BANKS })
+eng.build({ grade:7, subject:'algebra', quarter:1 })</span></div>
+      </div>
+
+      <figure class="dg-wrap">
+        <figcaption>fig. 1 — container anatomy: strict grade → subject → quarter partition</figcaption>
+        <svg class="dg" viewBox="0 0 960 250" role="img" aria-label="Bank container tree: OURI_BANKS root, grade 7, subjects algebra geometry russian, quarters 1 to 4, items with fields t ty o c e tp">
+          <defs><marker id="ar1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ar"/></marker></defs>
+          <rect class="bx bx--ink" x="20" y="95" width="170" height="56" rx="10"/>
+          <text class="t-i" x="105" y="118" text-anchor="middle">OURI_BANKS</text>
+          <text class="t-i" x="105" y="136" text-anchor="middle" style="font-size:10px;opacity:.75">container object</text>
+          <rect class="bx" x="250" y="95" width="120" height="56" rx="10"/>
+          <text class="t-h" x="310" y="118" text-anchor="middle">grade 7</text>
+          <text class="t-s" x="310" y="136" text-anchor="middle">keys: 0…11</text>
+          <path class="ln ln--flow" d="M190 123 H250" marker-end="url(#ar1)"/>
+          <rect class="bx" x="430" y="20" width="160" height="46" rx="10"/>
+          <text class="t-h" x="510" y="40" text-anchor="middle">algebra</text>
+          <text class="t-s" x="510" y="56" text-anchor="middle">20 subjects</text>
+          <rect class="bx" x="430" y="100" width="160" height="46" rx="10"/>
+          <text class="t-h" x="510" y="120" text-anchor="middle">geometry</text>
+          <text class="t-s" x="510" y="136" text-anchor="middle">…</text>
+          <rect class="bx" x="430" y="180" width="160" height="46" rx="10"/>
+          <text class="t-h" x="510" y="200" text-anchor="middle">informatics</text>
+          <text class="t-s" x="510" y="216" text-anchor="middle">811 JS questions</text>
+          <path class="ln ln--flow" d="M370 112 C400 100 400 60 430 46" marker-end="url(#ar1)"/>
+          <path class="ln ln--flow" d="M370 123 H430" marker-end="url(#ar1)"/>
+          <path class="ln ln--flow" d="M370 134 C400 146 400 190 430 202" marker-end="url(#ar1)"/>
+          <rect class="bx bx--soft" x="650" y="14" width="72" height="40" rx="8"/><text class="t-h" x="686" y="39" text-anchor="middle">q1</text>
+          <rect class="bx bx--soft" x="734" y="14" width="72" height="40" rx="8"/><text class="t-h" x="770" y="39" text-anchor="middle">q2</text>
+          <rect class="bx bx--soft" x="818" y="14" width="72" height="40" rx="8"/><text class="t-h" x="854" y="39" text-anchor="middle">q3</text>
+          <path class="ln" d="M590 43 H650" marker-end="url(#ar1)"/>
+          <path class="ln" d="M590 43 C620 43 700 34 734 34" marker-end="url(#ar1)"/>
+          <path class="ln" d="M590 43 C620 43 780 34 818 34" marker-end="url(#ar1)"/>
+          <rect class="bx bx--ink" x="650" y="86" width="290" height="120" rx="10"/>
+          <text class="t-i" x="795" y="110" text-anchor="middle">[ item, item, item, … ]</text>
+          <text x="795" y="134" text-anchor="middle" class="t-s" style="fill:var(--bg);opacity:.8">{ t, ty, o, c, e, tp, q }</text>
+          <text x="795" y="156" text-anchor="middle" class="t-s" style="fill:var(--bg);opacity:.8">≥ 36 questions per quarter</text>
+          <text x="795" y="178" text-anchor="middle" class="t-s" style="fill:var(--bg);opacity:.8">no item belongs to two quarters</text>
+          <path class="ln ln--flow" d="M686 54 V86" marker-end="url(#ar1)"/>
+        </svg>
+      </figure>
+
+      <h3 class="sub-h">Validation rules — exactly what <code>QKC.validate()</code> checks</h3>
+      <div class="prose"><ul>
+        <li><b>Non-empty.</b> <code>bank is empty</code> if there are zero items.</li>
+        <li><b><code>t</code></b> — required, non-empty string.</li>
+        <li><b><code>ty</code></b> — one of <code>choice</code> / <code>bool</code> / <code>input</code>.</li>
+        <li><b><code>c</code></b> — required, non-empty.</li>
+        <li><b><code>choice</code></b> — <code>o</code> required with ≥ 2 options, and <code>c</code> must be one of them.</li>
+        <li><b><code>bool</code></b> — <code>c</code> must be <code>'true'</code> or <code>'false'</code>.</li>
+      </ul></div>
+      <div class="split">
+        <div class="pane">
+          <h3>errors are actionable</h3>
+          <div class="code" id="code-val">QKC.validate([
+  { t: '', ty: 'nope', c: '' },
+  { t: 'Capital of France?', ty: 'choice',
+    o: ['Paris'], c: 'Lyon' }
+]);
+<i>// → { ok: false, errors: [
+//   'item#0: missing text (t)',
+//   'item#0: bad type (ty)',
+//   'item#0: missing answer (c)',
+//   'item#1: choice needs options (o)',
+//   'item#1: correct answer not in options' ] }</i></div>
+          <button class="copy" data-copy="code-val" type="button">copy</button>
+        </div>
+        <div class="pane">
+          <h3>csv → bank in 10 lines</h3>
+          <div class="code" id="code-csv"><i>// t,ty,o,c,e,tp  — options separated by "|"</i>
+<b>function</b> csvToBank(csv) {
+  <b>const</b> [head, ...rows] = csv.trim().split(/\r?\n/);
+  <b>return</b> rows.map(line =&gt; {
+    <b>const</b> [t, ty, o, c, e, tp] = line.split(';');
+    <b>const</b> item = { t, ty, c, e, tp };
+    <b>if</b> (ty === 'choice') item.o = o.split('|');
+    <b>return</b> item;
+  });
+}
+QKC.validate(csvToBank(text)); <i>// audit first!</i></div>
+          <button class="copy" data-copy="code-csv" type="button">copy</button>
+        </div>
+      </div>
+  </section>
+
+  <!-- ═══ 05 QUESTION TYPES ═══ -->
+  <section id="types">
+      <span class="kicker">05 · question types</span>
+      <h2>Three types. Each one live.</h2>
+      <p class="sec-sub">Every item declares its type in <code>ty</code>. Below — three real widgets, one question each,
+        rendered by three <code>QKC.init()</code> calls on this page. Answer them: the behavior described is the behavior you get.</p>
+      <div class="gal">
+        <div class="pane"><span class="pane-label">ty: 'choice' — radio options, keys A/B/C, deterministic shuffle</span><div id="ty-choice"></div></div>
+        <div class="pane"><span class="pane-label">ty: 'bool' — auto options true/false, localized Верно/Неверно</span><div id="ty-bool"></div></div>
+        <div class="pane"><span class="pane-label">ty: 'input' — free text, graded via norm(), Enter = check</span><div id="ty-input"></div></div>
+      </div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>type</th><th>required fields</th><th>rendered as</th><th>graded as</th></tr></thead>
+        <tbody>
+          <tr><td><code>choice</code></td><td><code>t, o (≥2), c ∈ o</code></td><td><code>role="radiogroup"</code> of buttons with letter keys; order shuffled from <code>seed</code> unless <code>shuffleOptions:false</code></td><td>selected option string, <code>norm()</code>-compared to <code>c</code></td></tr>
+          <tr><td><code>bool</code></td><td><code>t, c: 'true'|'false'</code></td><td>two options; labels localized (True/False · Верно/Неверно)</td><td><code>'true'</code>/<code>'false'</code> string</td></tr>
+          <tr><td><code>input</code></td><td><code>t, c</code></td><td>text input, monospace, placeholder from <code>lang</code>; <kbd>Enter</kbd> triggers the primary action</td><td>typed text, <code>norm()</code>-compared — case/whitespace-insensitive, <code>,</code> = <code>.</code></td></tr>
+        </tbody>
+      </table></div>
+  </section>
+
+  <!-- ═══ 06 MODES ═══ -->
+  <section id="modes">
+      <span class="kicker">06 · modes</span>
+      <h2>normal · exam · sprint — three flows, one widget.</h2>
+      <p class="sec-sub">The mode changes interaction, grading timing and what <code>onAnswer</code> does — not the API.
+        Switch it live with <code>instance.update({ mode })</code> or the demo above.</p>
+      <figure class="dg-wrap">
+        <figcaption>fig. 2 — mode flows</figcaption>
+        <svg class="dg" viewBox="0 0 960 300" role="img" aria-label="Timeline diagram of the three modes: normal shows check and explanation per question; exam allows free navigation and grades at finish; sprint counts down per question and auto-advances">
+          <defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ar"/></marker></defs>
+          <text class="t-h" x="20" y="34">normal</text>
+          <rect class="bx" x="110" y="14" width="150" height="44" rx="9"/><text class="t-s" x="185" y="33" text-anchor="middle">question shown</text><text class="t-s" x="185" y="48" text-anchor="middle">answer → [check]</text>
+          <rect class="bx" x="300" y="14" width="170" height="44" rx="9"/><text class="t-s" x="385" y="33" text-anchor="middle">✓/✗ + right answer</text><text class="t-s" x="385" y="48" text-anchor="middle">+ explanation (e)</text>
+          <rect class="bx" x="510" y="14" width="130" height="44" rx="9"/><text class="t-s" x="575" y="33" text-anchor="middle">[next] → q+1</text><text class="t-s" x="575" y="48" text-anchor="middle">…repeat…</text>
+          <rect class="bx bx--ink" x="680" y="14" width="240" height="44" rx="9"/><text class="t-i" x="800" y="33" text-anchor="middle" style="font-size:11px">[finish] → result + onFinish</text><text class="t-i" x="800" y="48" text-anchor="middle" style="font-size:9.5px;opacity:.75">onAnswer fires on every check</text>
+          <path class="ln ln--flow" d="M260 36 H300" marker-end="url(#ar2)"/><path class="ln ln--flow" d="M470 36 H510" marker-end="url(#ar2)"/><path class="ln ln--flow" d="M640 36 H680" marker-end="url(#ar2)"/>
+          <text class="t-h" x="20" y="134">exam</text>
+          <rect class="bx" x="110" y="114" width="150" height="44" rx="9"/><text class="t-s" x="185" y="133" text-anchor="middle">question shown</text><text class="t-s" x="185" y="148" text-anchor="middle">answer saved silently</text>
+          <rect class="bx" x="300" y="114" width="170" height="44" rx="9"/><text class="t-s" x="385" y="133" text-anchor="middle">[next] / [prev] — free nav</text><text class="t-s" x="385" y="148" text-anchor="middle">"3 / 10 answers" counter</text>
+          <rect class="bx" x="510" y="114" width="130" height="44" rx="9"/><text class="t-s" x="575" y="133" text-anchor="middle">[finish] — grade</text><text class="t-s" x="575" y="148" text-anchor="middle">all items at once</text>
+          <rect class="bx bx--ink" x="680" y="114" width="240" height="44" rx="9"/><text class="t-i" x="800" y="133" text-anchor="middle" style="font-size:11px">result + onFinish</text><text class="t-i" x="800" y="148" text-anchor="middle" style="font-size:9.5px;opacity:.75">onAnswer × N fires at finish</text>
+          <path class="ln ln--flow" d="M260 136 H300" marker-end="url(#ar2)"/><path class="ln ln--flow" d="M470 136 H510" marker-end="url(#ar2)"/><path class="ln ln--flow" d="M640 136 H680" marker-end="url(#ar2)"/>
+          <text class="t-h" x="20" y="234">sprint</text>
+          <rect class="bx" x="110" y="214" width="150" height="44" rx="9"/><text class="t-s" x="185" y="233" text-anchor="middle">question + countdown</text><text class="t-s" x="185" y="248" text-anchor="middle">timePerQuestion (30s)</text>
+          <rect class="bx" x="300" y="214" width="170" height="44" rx="9"/><text class="t-s" x="385" y="233" text-anchor="middle">tap → flash → auto-next</text><text class="t-s" x="385" y="248" text-anchor="middle">no reveal, graded silently</text>
+          <rect class="bx" x="510" y="214" width="130" height="44" rx="9"/><text class="t-s" x="575" y="233" text-anchor="middle">timeout →</text><text class="t-s" x="575" y="248" text-anchor="middle">skipped, auto-next</text>
+          <rect class="bx bx--ink" x="680" y="214" width="240" height="44" rx="9"/><text class="t-i" x="800" y="233" text-anchor="middle" style="font-size:11px">result + onFinish</text><text class="t-i" x="800" y="248" text-anchor="middle" style="font-size:9.5px;opacity:.75">onAnswer on select and timeout</text>
+          <path class="ln ln--flow" d="M260 236 H300" marker-end="url(#ar2)"/><path class="ln ln--flow" d="M470 236 H510" marker-end="url(#ar2)"/><path class="ln ln--flow" d="M640 236 H680" marker-end="url(#ar2)"/>
+          <text class="t-s" x="110" y="288">the progress bar is the countdown: it drains in real time and the header shows “Time left Ns”</text>
+        </svg>
+      </figure>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th></th><th>normal</th><th>exam</th><th>sprint</th></tr></thead>
+        <tbody>
+          <tr><td>instant feedback</td><td>✓ after check</td><td>— none until finish</td><td>— never (anti-cheat pace)</td></tr>
+          <tr><td>navigation</td><td>forward only</td><td>next + prev, any order</td><td>auto-advance</td></tr>
+          <tr><td>timer</td><td>—</td><td>—</td><td>per question (<code>timePerQuestion</code>)</td></tr>
+          <tr><td>explanations</td><td>after each check</td><td>not shown</td><td>not shown</td></tr>
+          <tr><td><code>onAnswer</code> timing</td><td>on each check</td><td>batch at finish</td><td>on select / timeout</td></tr>
+          <tr><td>typical use</td><td>learning, practice</td><td>mock tests, control works</td><td>fluency drills, tables, facts</td></tr>
+        </tbody>
+      </table></div>
+  </section>
+
+  <!-- ═══ 07 THEMES ═══ -->
+  <section id="themes">
+      <span class="kicker">07 · themes &amp; css</span>
+      <h2>Three themes, eight CSS variables, zero !important.</h2>
+      <p class="sec-sub">The widget injects one scoped stylesheet (<code>.qkc-*</code> classes, <code>data-theme</code> attribute)
+        and paints itself entirely through CSS variables — so a theme is just a variable set, and yours can be too.
+        All three, live, same question:</p>
+      <div class="gal">
+        <div class="pane"><span class="pane-label">theme: 'bw' — strict black/white, square corners, 2px borders</span><div id="th-bw"></div></div>
+        <div class="pane"><span class="pane-label">theme: 'light' — paper</span><div id="th-light"></div></div>
+        <div class="pane"><span class="pane-label">theme: 'dark' — ink</span><div id="th-dark"></div></div>
+      </div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>variable</th><th>paints</th><th>bw</th><th>light</th><th>dark</th></tr></thead>
+        <tbody>
+          <tr><td><code>--qkc-bg</code></td><td>widget background</td><td class="mono">#fff</td><td class="mono">#fafafa</td><td class="mono">#131317</td></tr>
+          <tr><td><code>--qkc-fg</code></td><td>text, primary buttons, progress fill</td><td class="mono">#000</td><td class="mono">#15151a</td><td class="mono">#f2f2f5</td></tr>
+          <tr><td><code>--qkc-line</code></td><td>borders</td><td class="mono">#000</td><td class="mono">#d7d7de</td><td class="mono">#2d2d36</td></tr>
+          <tr><td><code>--qkc-muted</code></td><td>secondary text, chips</td><td class="mono">#3d3d3d</td><td class="mono">#6b6b76</td><td class="mono">#90909b</td></tr>
+          <tr><td><code>--qkc-soft</code></td><td>progress track</td><td class="mono">#f2f2f2</td><td class="mono">#efeff2</td><td class="mono">#1b1b21</td></tr>
+          <tr><td><code>--qkc-sel</code> / <code>--qkc-selfg</code></td><td>selected option bg / fg</td><td class="mono">#000 / #fff</td><td class="mono">#15151a / #fff</td><td class="mono">#f2f2f5 / #131317</td></tr>
+          <tr><td><code>--qkc-r</code></td><td>corner radius (bw = 0)</td><td class="mono">0px</td><td class="mono">14px</td><td class="mono">14px</td></tr>
+        </tbody>
+      </table></div>
+      <div class="split">
+        <div class="pane">
+          <h3>custom theme — 6 lines of css</h3>
+          <div class="code" id="code-theme"><i>/* add a fourth theme next to bw/light/dark */</i>
+&lt;<b>style</b>&gt;
+.qkc-root[data-theme="paper"]{
+  --qkc-bg:#f7f3ea; --qkc-fg:#201c14;
+  --qkc-line:#c9c0ad; --qkc-muted:#7a715d;
+  --qkc-soft:#ece5d4; --qkc-sel:#201c14;
+  --qkc-selfg:#f7f3ea; --qkc-r:6px;
+}
+&lt;/<b>style</b>&gt;
+&lt;<b>script</b>&gt;
+  QKC.init({ bank, el:'#quiz', theme:'paper' });
+  <i>// unknown theme → falls back to 'bw';</i>
+  <i>// but data-theme="paper" is still set,</i>
+  <i>// so your variables win.</i>
+&lt;/<b>script</b>&gt;</div>
+          <button class="copy" data-copy="code-theme" type="button">copy</button>
+        </div>
+        <div class="pane">
+          <h3>why it never clashes with your page</h3>
+          <p class="pane-note">All rules are prefixed with <code>.qkc-root</code> and injected once per document
+            (<code>&lt;style id="qkc-engine-css"&gt;</code>) — the widget neither reads nor writes your stylesheets.
+            Host-page inheritance is cut at the root: it sets its own <code>font-family</code>, <code>text-align</code>,
+            <code>line-height</code> and <code>box-sizing</code>. Ten widgets on one page share one stylesheet;
+            each paints itself from its own <code>data-theme</code>.</p>
+          <p class="pane-note">Sizing: the root is <code>max-width:600px</code>; drop it in a flex/grid cell and it fills it.
+            The site theme switch in the header of <em>this</em> page (dark/light/b/w) is the same idea applied to the docs.</p>
+        </div>
+      </div>
+  </section>
+
+  <!-- ═══ 08 PLAYGROUND ═══ -->
   <section id="playground">
-    <div class="wrap">
-      <span class="kicker">03 · playground</span>
+      <span class="kicker">08 · playground</span>
       <h2>Paste your bank. Watch the engine render it.</h2>
       <p class="sec-sub">The most honest way to try a library: no install, no account — an array of
         <code>{t, ty, o, c, e, tp}</code> items on the left, the real engine on the right.
-        Everything runs locally in your browser; nothing is uploaded.</p>
+        Everything runs locally in your browser; nothing is uploaded. <kbd>Ctrl</kbd>+<kbd>Enter</kbd> runs.</p>
       <div class="split">
         <div class="pane">
           <h3>bank (JSON or JS array literal)</h3>
           <textarea id="pgSrc" spellcheck="false" aria-label="Question bank source"></textarea>
           <div class="acts">
-            <button class="btn" id="pgValidate" type="button">QKC.validate()</button>
-            <button class="btn btn--primary" id="pgRun" type="button">QKC.init() ▶</button>
-            <button class="btn btn--ghost" id="pgSample" type="button">load sample</button>
+            <button class="btn btn--sm" id="pgValidate" type="button">QKC.validate()</button>
+            <button class="btn btn--primary btn--sm" id="pgRun" type="button">QKC.init() ▶</button>
+            <button class="btn btn--ghost btn--sm" id="pgSample" type="button">load sample</button>
+            <button class="btn btn--ghost btn--sm" id="pgEmbed" type="button">copy embed HTML</button>
           </div>
           <div id="pgOut" class="pg-out muted mono" aria-live="polite"></div>
         </div>
         <div class="pane">
           <h3>rendered widget</h3>
           <div class="switches switches--mini">
-            <div class="sw"><span class="sw__k mono">mode</span>
+            <div class="sw"><span class="sw__k">mode</span>
               <div class="seg" id="pgMode">
                 <button type="button" data-v="normal" class="on">normal</button><button type="button" data-v="exam">exam</button><button type="button" data-v="sprint">sprint</button>
               </div>
             </div>
-            <div class="sw"><span class="sw__k mono">theme</span>
+            <div class="sw"><span class="sw__k">theme</span>
               <div class="seg" id="pgTheme">
                 <button type="button" data-v="bw" class="on">b/w</button><button type="button" data-v="light">light</button><button type="button" data-v="dark">dark</button>
               </div>
             </div>
-            <div class="sw"><span class="sw__k mono">lang</span>
+            <div class="sw"><span class="sw__k">lang</span>
               <div class="seg" id="pgLang">
                 <button type="button" data-v="ru" class="on">RU</button><button type="button" data-v="en">EN</button>
               </div>
@@ -186,77 +701,28 @@
           <div id="pg-quiz"></div>
         </div>
       </div>
-    </div>
   </section>
 
-  <!-- ═══ 04 BANK FORMAT ═══ -->
-  <section id="format">
-    <div class="wrap">
-      <span class="kicker">04 · bank format</span>
-      <h2>A question is six fields. A bank is an array.</h2>
-      <p class="sec-sub">No DSL, no schema registry, no server. Plain objects — the same format the QKC trainer
-        ships its 42 823 questions in. Real item from <code>OURI_BANKS[7].algebra[1]</code> (grade 7, algebra, quarter 1):</p>
-      <table>
-        <thead><tr><th>field</th><th>type</th><th>meaning</th></tr></thead>
-        <tbody>
-          <tr><td><code>t</code></td><td>string</td><td>question text</td></tr>
-          <tr><td><code>ty</code></td><td>'choice' | 'bool' | 'input'</td><td>pick an option / true–false / free keyboard input</td></tr>
-          <tr><td><code>o</code></td><td>string[]</td><td>options — required for <code>choice</code>, shuffled deterministically per seed</td></tr>
-          <tr><td><code>c</code></td><td>string</td><td>correct answer (compared trimmed, case- and comma-insensitive)</td></tr>
-          <tr><td><code>e</code></td><td>string</td><td>explanation shown after checking</td></tr>
-          <tr><td><code>tp</code></td><td>string</td><td>topic — used for filters and per-topic stats</td></tr>
-          <tr><td><code>q</code></td><td>number, optional</td><td>quarter/term index inside a container bank</td></tr>
-        </tbody>
-      </table>
-      <div class="cols" style="margin-top:16px">
-        <div>
-          <div class="code"><i>// one real item</i>
-{
-  "t": "Раскрой скобки: (x + 10)(x + 7)",
-  "ty": "choice",
-  "o": ["x² + 17x + 70", "x² + 10x + 7",
-        "x² + 70x + 17", "x² − 17x + 70"],
-  "c": "x² + 17x + 70",
-  "e": "По формуле (x+p)(x+q) = x² + (p+q)x + pq.",
-  "tp": "Многочлены",
-  "q": 1
-}</div>
-        </div>
-        <div>
-          <div class="code"><i>// init() accepts three shapes:</i>
-QKC.init({ bank: [ item, item, … ] });            <i>// flat array</i>
-QKC.init({ bank: { items: [ … ] } });             <i>// { items }</i>
-QKC.init({ bank: OURI_BANKS[7].algebra[1] });     <i>// quarter slice</i>
-
-<i>// …or the full nested container — filter later:</i>
-const eng = QKC.engine(OURI_BANKS);
-eng.count({ grade: 7, subject: 'algebra' });      <i>// 460</i>
-const test = eng.build({ grade: 7, subject: 'algebra',
-  quarter: 1, count: 10, seed: 'demo' });         <i>// seeded, reproducible</i></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ 05 EMBED ═══ -->
+  <!-- ═══ 09 EMBEDDING ═══ -->
   <section id="embed">
-    <div class="wrap">
-      <span class="kicker">05 · embedding</span>
-      <h2>Any page. Any framework. Or none.</h2>
-      <p class="sec-sub">The widget is framework-agnostic DOM — it mounts into an element you own and
-        cleans up after itself. <code>QKC.init()</code> returns <code>{ restart, update, destroy, results }</code>.</p>
+      <span class="kicker">09 · embedding</span>
+      <h2>Any page, any framework, any bundler. Or none.</h2>
+      <p class="sec-sub">The engine is UMD + ESM with committed <code>dist/</code> — a <code>&lt;script&gt;</code> tag,
+        an <code>import</code>, a <code>require</code> and a CDN link all load byte-identical code.</p>
       <div class="tabs" role="tablist" aria-label="Embedding examples">
         <button type="button" role="tab" class="on" data-tab="tab-html">Plain page</button>
         <button type="button" role="tab" data-tab="tab-react">React</button>
         <button type="button" role="tab" data-tab="tab-vue">Vue</button>
-        <button type="button" role="tab" data-tab="tab-custom">Custom bank</button>
+        <button type="button" role="tab" data-tab="tab-wc">Web Component</button>
+        <button type="button" role="tab" data-tab="tab-node">Node (headless)</button>
+        <button type="button" role="tab" data-tab="tab-custom">Build + validate</button>
       </div>
       <div class="tabpanes">
         <div class="code" id="tab-html"><i>&lt;!-- no bundler, no npm, no config --&gt;</i>
 &lt;<b>script</b> src="https://qkc.js.org/engine.js"&gt;&lt;/<b>script</b>&gt;
 &lt;<b>div</b> id="quiz"&gt;&lt;/<b>div</b>&gt;
 &lt;<b>script</b>&gt;
-  const quiz = QKC.<b>init</b>({
+  <b>const</b> quiz = QKC.<b>init</b>({
     bank:  myBank,            <i>// [{ t, ty, o, c, e, tp }, …]</i>
     el:    '#quiz',
     mode:  'normal',          <i>// 'normal' | 'exam' | 'sprint'</i>
@@ -264,6 +730,7 @@ const test = eng.build({ grade: 7, subject: 'algebra',
     lang:  'ru',              <i>// 'ru' | 'en'  (default: autodetect)</i>
     count: 10,
     seed:  'spring-2026',     <i>// same seed → same quiz</i>
+    onAnswer: a =&gt; console.log('answered', a.id, a.correct),
     onFinish: r =&gt; console.log(r.pct, r.perTopic)
   });
 &lt;/<b>script</b>&gt;</div>
@@ -301,6 +768,38 @@ onBeforeUnmount(() =&gt; inst?.destroy());
 &lt;/<b>script</b>&gt;
 
 &lt;<b>template</b>&gt;&lt;<b>div</b> ref="host"&gt;&lt;/<b>div</b>&gt;&lt;/<b>template</b>&gt;</div>
+        <div class="code" id="tab-wc" hidden><i>// a custom element wrapping the widget — framework-neutral</i>
+<b>import</b> QKC from 'qkc-engine';
+
+<b>class</b> <b>QkcQuiz</b> <b>extends</b> HTMLElement {
+  connectedCallback() {
+    <b>const</b> bank = JSON.parse(<b>this</b>.getAttribute('bank') || '[]');
+    <b>this</b>._inst = QKC.<b>init</b>({
+      bank, el: <b>this</b>,
+      mode:  <b>this</b>.getAttribute('mode')  || 'normal',
+      theme: <b>this</b>.getAttribute('theme') || 'bw',
+      lang:  <b>this</b>.getAttribute('lang')  || 'en',
+    });
+  }
+  disconnectedCallback() { <b>this</b>._inst?.destroy(); }
+}
+customElements.define('qkc-quiz', QkcQuiz);
+
+<i>// &lt;qkc-quiz bank='[{"t":"2+2=?","ty":"input","c":"4"}]' theme="dark"&gt;&lt;/qkc-quiz&gt;</i></div>
+        <div class="code" id="tab-node" hidden><i>// Node — no DOM needed for the headless core (grading, generators, CI)</i>
+<b>const</b> QKC = require('qkc-engine');        <i>// or: import QKC from 'qkc-engine'</i>
+<b>const</b> bank = require('./banks/algebra-7.json');
+
+<b>const</b> eng  = QKC.engine(bank);
+<b>const</b> v    = eng.validate();
+<b>if</b> (!v.ok) { console.error(v.errors); process.exit(1); }
+
+<b>const</b> test = eng.build({ quarter: 1, count: 20, seed: process.env.SEED || 'final' });
+<b>const</b> res  = eng.score(test, studentAnswers);   <i>// {0:'…', 1:'…'} from your backend</i>
+console.log(res.pct + '%', res.perTopic);
+
+<i>// QKC.init() is the only DOM-touching API —</i>
+<i>// everything else runs in Node, Workers, Deno, bun.</i></div>
         <div class="code" id="tab-custom" hidden><i>// Build a bank in code, validate it, then embed</i>
 <b>const</b> bank = [
   { t: 'typeof null', ty: 'choice', o: ['"object"', '"null"', '"undefined"'],
@@ -315,47 +814,277 @@ onBeforeUnmount(() =&gt; inst?.destroy());
 <b>if</b> (!v.ok) console.error(v.errors);
 <b>else</b> QKC.<b>init</b>({ bank, el: '#quiz', lang: 'en', theme: 'light' });</div>
       </div>
-    </div>
   </section>
 
-  <!-- ═══ 06 ARCHITECTURE ═══ -->
+  <!-- ═══ 10 ARCHITECTURE ═══ -->
   <section id="architecture">
-    <div class="wrap">
-      <span class="kicker">06 · architecture</span>
-      <h2>How it is built: nothing.</h2>
-      <p class="sec-sub">The engine is one ES5-compatible file: seeded RNG (mulberry32), bank traversal,
-        validation, build/score — plus a ~250-line DOM widget that injects its own scoped CSS.
-        The QKC app on top of it is built the same way — vanilla JS, zero dependencies, zero bundlers.
-        The source <em>is</em> the build.</p>
-      <div class="api">
-        <div class="card"><h3>Router</h3><p>Hash-based screen router in ~60 lines: routes, params, history, deep links (<code>#/quiz?g=7&amp;s=algebra</code>). No router library.</p><span class="sig">window.addEventListener('hashchange', render)</span></div>
-        <div class="card"><h3>State</h3><p>One store object + <code>localStorage</code> persistence with schema versioning. Predictable: every screen is a pure function of state.</p><span class="sig">state → render(screen) → DOM</span></div>
-        <div class="card"><h3>i18n</h3><p>Two flat dictionaries (RU/EN, 412 keys each) + runtime switch. The widget ships its own mini-dictionary — same approach, 25 keys.</p><span class="sig">t('quiz.next') → 'Далее' | 'Next'</span></div>
-        <div class="card"><h3>PWA</h3><p>Service worker (network-first, versioned cache), web app manifest, offline quiz runs from cached banks. Installable, no app store.</p><span class="sig">sw.js · manifest.webmanifest · offline</span></div>
-        <div class="card"><h3>a11y</h3><p>Semantic landmarks, <code>role="radiogroup"</code> options, <code>aria-live</code> feedback, visible focus, <code>prefers-reduced-motion</code>. Keyboard-complete.</p><span class="sig">Tab / Enter / Space — everywhere</span></div>
-        <div class="card"><h3>Determinism</h3><p>Same seed → same quiz: mulberry32 PRNG + FNV-1a string hashing. Tests are reproducible down to option order — that is what makes grading auditable.</p><span class="sig">build({ seed: 'spring-2026' }) ≡ build({ seed: 'spring-2026' })</span></div>
+      <span class="kicker">10 · architecture</span>
+      <h2>The whole engine, taken apart.</h2>
+      <p class="sec-sub">One ES5-compatible file, four layers, zero dependencies. This section is the guided tour:
+        what each layer does, what literally happens between <code>QKC.init()</code> and the first rendered question,
+        and why the same seed always produces the same quiz.</p>
+
+      <figure class="dg-wrap">
+        <figcaption>fig. 3 — module map: src/core.js, bottom to top</figcaption>
+        <svg class="dg" viewBox="0 0 960 372" role="img" aria-label="Module map: foundation layer with rng hashSeed shuffle norm items; engine layer with build score count topics validate; widget layer with state renderers events lifecycle i18n css; exports layer QKC">
+          <defs><marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ar"/></marker></defs>
+          <rect class="bx bx--ink" x="20" y="16" width="920" height="60" rx="12"/>
+          <text class="t-i" x="40" y="40">exports — the QKC object</text>
+          <text class="t-i" x="40" y="60" style="font-size:10px;opacity:.8">init · engine · validate · items · toArray · rng · hashSeed · norm · STR · VERSION</text>
+          <rect class="bx" x="20" y="100" width="920" height="96" rx="12"/>
+          <text class="t-h" x="40" y="124">widget layer — QKC.init() ≈ 250 lines of DOM</text>
+          <rect class="bx bx--soft" x="40" y="136" width="160" height="44" rx="8"/><text class="t-s" x="120" y="154" text-anchor="middle">state st{mode,theme,</text><text class="t-s" x="120" y="169" text-anchor="middle">lang,seed,count,…}</text>
+          <rect class="bx bx--soft" x="216" y="136" width="160" height="44" rx="8"/><text class="t-s" x="296" y="154" text-anchor="middle">renderers: question,</text><text class="t-s" x="296" y="169" text-anchor="middle">result, error card</text>
+          <rect class="bx bx--soft" x="392" y="136" width="160" height="44" rx="8"/><text class="t-s" x="472" y="154" text-anchor="middle">one delegated click</text><text class="t-s" x="472" y="169" text-anchor="middle">listener + keydown</text>
+          <rect class="bx bx--soft" x="568" y="136" width="160" height="44" rx="8"/><text class="t-s" x="648" y="154" text-anchor="middle">lifecycle: start,</text><text class="t-s" x="648" y="169" text-anchor="middle">update, destroy</text>
+          <rect class="bx bx--soft" x="744" y="136" width="176" height="44" rx="8"/><text class="t-s" x="832" y="154" text-anchor="middle">i18n STR{ru,en} +</text><text class="t-s" x="832" y="169" text-anchor="middle">injected .qkc-* CSS</text>
+          <rect class="bx" x="20" y="220" width="920" height="62" rx="12"/>
+          <text class="t-h" x="40" y="244">engine layer — QKC.engine(bank), pure functions</text>
+          <text class="t-s" x="40" y="266">build({filter, count, seed}) → test · score(test, answers) → result · count · topics · validate</text>
+          <rect class="bx" x="20" y="306" width="920" height="52" rx="12"/>
+          <text class="t-h" x="40" y="328">foundation</text>
+          <text class="t-s" x="40" y="346">rng: mulberry32 · hashSeed: FNV-1a · shuffle: Fisher–Yates · norm: answer comparator · items: container traversal</text>
+          <path class="ln ln--flow" d="M480 306 V282" marker-end="url(#ar3)"/>
+          <path class="ln ln--flow" d="M480 220 V196" marker-end="url(#ar3)"/>
+          <path class="ln ln--flow" d="M480 100 V76" marker-end="url(#ar3)"/>
+        </svg>
+      </figure>
+
+      <figure class="dg-wrap">
+        <figcaption>fig. 4 — data flow: bank in, result out</figcaption>
+        <svg class="dg" viewBox="0 0 960 220" role="img" aria-label="Data flow: bank through toArray validate rng build into test items, user answers, score, result object">
+          <defs><marker id="ar4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ar"/></marker></defs>
+          <rect class="bx" x="14" y="30" width="164" height="58" rx="10"/><text class="t-h" x="96" y="54" text-anchor="middle">bank</text><text class="t-s" x="96" y="72" text-anchor="middle">array | {items} | container</text>
+          <rect class="bx" x="216" y="30" width="128" height="58" rx="10"/><text class="t-h" x="280" y="54" text-anchor="middle">toArray()</text><text class="t-s" x="280" y="72" text-anchor="middle">→ flat list</text>
+          <rect class="bx" x="382" y="30" width="128" height="58" rx="10"/><text class="t-h" x="446" y="54" text-anchor="middle">validate()</text><text class="t-s" x="446" y="72" text-anchor="middle">{ok, errors[]}</text>
+          <rect class="bx" x="548" y="30" width="150" height="58" rx="10"/><text class="t-h" x="623" y="54" text-anchor="middle">rng(seed)</text><text class="t-s" x="623" y="72" text-anchor="middle">FNV-1a → mulberry32</text>
+          <rect class="bx bx--ink" x="736" y="30" width="210" height="58" rx="10"/><text class="t-i" x="841" y="54" text-anchor="middle" style="font-size:12px">build() / internal build</text><text class="t-i" x="841" y="72" text-anchor="middle" style="font-size:9.5px;opacity:.8">shuffle → pick count → shuffle options</text>
+          <path class="ln ln--flow" d="M178 59 H216" marker-end="url(#ar4)"/>
+          <path class="ln ln--flow" d="M344 59 H382" marker-end="url(#ar4)"/>
+          <path class="ln ln--flow" d="M510 59 H548" marker-end="url(#ar4)"/>
+          <path class="ln ln--flow" d="M698 59 H736" marker-end="url(#ar4)"/>
+          <rect class="bx" x="736" y="132" width="210" height="58" rx="10"/><text class="t-h" x="841" y="156" text-anchor="middle">test.items + answers</text><text class="t-s" x="841" y="174" text-anchor="middle">answers: { [id]: value }</text>
+          <path class="ln ln--flow" d="M841 88 V132" marker-end="url(#ar4)"/>
+          <rect class="bx" x="470" y="132" width="180" height="58" rx="10"/><text class="t-h" x="560" y="156" text-anchor="middle">score(test, answers)</text><text class="t-s" x="560" y="174" text-anchor="middle">norm(v) === norm(c)</text>
+          <path class="ln ln--flow" d="M736 161 H650" marker-end="url(#ar4)"/>
+          <rect class="bx bx--ink" x="14" y="132" width="380" height="58" rx="10"/><text class="t-i" x="204" y="156" text-anchor="middle" style="font-size:12px">result { correct, wrong, skip, total, pct,</text><text class="t-i" x="204" y="174" text-anchor="middle" style="font-size:12px">perTopic, seed, mode } → onFinish</text>
+          <path class="ln ln--flow" d="M470 161 H394" marker-end="url(#ar4)"/>
+        </svg>
+      </figure>
+
+      <h3 class="sub-h">What literally happens, call by call</h3>
+      <div class="steps">
+        <div class="step"><div><b><code>QKC.init(opts)</code> resolves the environment</b><span>Picks <code>document</code> (option or global), resolves <code>el</code> (selector/node) or creates a mount div; unknown mode/theme/lang values fall back to safe defaults instead of throwing.</span></div></div>
+        <div class="step"><div><b><code>toArray(bank)</code> flattens the bank</b><span>Array → copy; <code>{items}</code> → <code>.items</code>; container → full traversal merging <code>grade/subject/quarter</code> into every item.</span></div></div>
+        <div class="step"><div><b>CSS is injected once</b><span><code>&lt;style id="qkc-engine-css"&gt;</code> with the whole <code>.qkc-*</code> sheet (~4 KB of the gzip budget). Tenth widget on the page reuses it.</span></div></div>
+        <div class="step"><div><b><code>validate(list)</code> runs before anything renders</b><span>Invalid bank → the widget renders an error card listing up to 6 problems instead of a broken quiz. Empty bank → “Bank is empty”.</span></div></div>
+        <div class="step"><div><b>The seeded build runs</b><span><code>seed</code> (string → FNV-1a hash → uint32) feeds mulberry32; Fisher–Yates shuffle picks <code>min(count, len)</code> items; each choice's options are shuffled from the same stream. Same seed ⇒ byte-identical quiz.</span></div></div>
+        <div class="step"><div><b><code>render()</code> draws one question</b><span>Head (title · mode chip · “Question i/N”), bar (progress, or a live countdown in sprint), topic chip, the control per <code>ty</code> (radiogroup / true-false / input), footer buttons per mode. Sprint starts a 100 ms <code>setInterval</code>.</span></div></div>
+        <div class="step"><div><b>One listener handles everything</b><span>A single delegated <code>click</code> handler on the root reads <code>data-act</code>/<code>data-val</code>; <kbd>Enter</kbd> in the input maps to the primary action. No per-button listeners, no virtual DOM — direct <code>createElement</code> calls.</span></div></div>
+        <div class="step"><div><b>Grading is <code>norm()</code> equality</b><span>trim → lowercase → collapse whitespace → <code>,</code>→<code>.</code>, then <code>===</code>. Fires <code>onAnswer</code> (timing depends on mode).</span></div></div>
+        <div class="step"><div><b><code>finish()</code> assembles the result</b><span>Counts correct/wrong/skip, builds <code>perTopic</code> from <code>tp</code>, calls <code>onFinish(result)</code> inside try/catch, renders the result screen: big <code>pct</code>, ✓/✗/– counters, per-question dots, topic table, seed chip, restart button.</span></div></div>
+        <div class="step"><div><b><code>update()/restart()/destroy()</code></b><span><code>update</code> applies new opts and rebuilds (this is how live theme/mode/lang switching works); <code>destroy</code> stops the timer and clears or removes the mount — safe in SPA cleanup hooks.</span></div></div>
       </div>
-    </div>
+
+      <figure class="dg-wrap">
+        <figcaption>fig. 5 — widget anatomy (normal mode, after a wrong check)</figcaption>
+        <svg class="dg" viewBox="0 0 960 430" role="img" aria-label="Annotated widget anatomy: head with title mode chip and progress, bar, topic chip, question text, options radiogroup, feedback line, explanation block, footer buttons">
+          <defs><marker id="ar5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ar"/></marker></defs>
+          <rect class="bx" x="300" y="14" width="360" height="400" rx="14"/>
+          <text class="t-h" x="320" y="44">Quick Knowledge Check</text>
+          <rect class="bx bx--soft" x="496" y="28" width="58" height="22" rx="999"/><text class="t-s" x="525" y="43" text-anchor="middle">NORMAL</text>
+          <text class="t-s" x="648" y="43" text-anchor="end">Question 2 / 4</text>
+          <rect class="bx bx--soft" x="320" y="58" width="320" height="6" rx="3"/><rect x="320" y="58" width="120" height="6" fill="var(--text)"/>
+          <text class="t-s" x="320" y="88" style="letter-spacing:.12em">CHOICE · АРИФМЕТИКА</text>
+          <text class="t-h" x="320" y="114" style="font-size:15px">2 + 2 = ?</text>
+          <rect class="bx" x="320" y="130" width="320" height="40" rx="9"/><text class="t-s" x="336" y="155">A  3</text>
+          <rect class="bx bx--ink" x="320" y="178" width="320" height="40" rx="9"/><text class="t-i" x="336" y="203" style="font-size:11px">B  4</text>
+          <rect class="bx" x="320" y="226" width="320" height="40" rx="9" style="stroke-dasharray:4 4"/><text class="t-s" x="336" y="251">C  5</text>
+          <text class="t-h" x="320" y="292" style="font-size:12px">✓ correct</text>
+          <rect x="320" y="304" width="3" height="42" fill="var(--text)"/>
+          <text class="t-s" x="336" y="322">Explanation: Базовая арифметика:</text>
+          <text class="t-s" x="336" y="338">2 + 2 = 4.</text>
+          <rect class="bx bx--ink" x="320" y="362" width="90" height="34" rx="999"/><text class="t-i" x="365" y="384" text-anchor="middle" style="font-size:11px">Next</text>
+          <text class="t-s" x="20" y="46">head — title + mode chip + progress</text><path class="ln" d="M258 42 H300" marker-end="url(#ar5)"/>
+          <text class="t-s" x="20" y="70">bar — progress (or countdown)</text><path class="ln" d="M218 66 C260 66 280 62 316 61" marker-end="url(#ar5)"/>
+          <text class="t-s" x="20" y="92">chip — ty · topic</text><path class="ln" d="M140 88 C220 88 260 85 316 85" marker-end="url(#ar5)"/>
+          <text class="t-s" x="20" y="118">question — t</text><path class="ln" d="M118 114 C200 112 260 110 316 110" marker-end="url(#ar5)"/>
+          <text class="t-s" x="700" y="150">options — role="radiogroup",</text><text class="t-s" x="700" y="166">letter keys, shuffled by seed;</text><text class="t-s" x="700" y="182">selected = inverted (aria-checked)</text><path class="ln" d="M692 160 H648" marker-end="url(#ar5)"/>
+          <text class="t-s" x="700" y="238">after check: right option solid,</text><text class="t-s" x="700" y="254">wrong pick dashed, all disabled</text><path class="ln" d="M692 244 H648" marker-end="url(#ar5)"/>
+          <text class="t-s" x="700" y="300">feedback + explanation (e)</text><path class="ln" d="M692 296 C660 296 660 300 648 306" marker-end="url(#ar5)"/>
+          <text class="t-s" x="700" y="352">foot — mode-dependent buttons;</text><text class="t-s" x="700" y="368">Enter = primary action</text><path class="ln" d="M692 358 C640 362 560 372 416 378" marker-end="url(#ar5)"/>
+          <text class="t-s" x="300" y="428" text-anchor="middle">result screen replaces this: pct · ✓✗– counters · dots per question · per-topic table · seed chip · [Restart]</text>
+        </svg>
+      </figure>
+
+      <h3 class="sub-h">Design decisions, honestly</h3>
+      <div class="api">
+        <div class="card"><h3>Determinism</h3><p>mulberry32 PRNG + FNV-1a hashing + Fisher–Yates: same seed → same quiz down to option order. Tests are reproducible, grading is auditable, bugs are replayable.</p><span class="sig">build({ seed:'x' }) ≡ build({ seed:'x' })</span></div>
+        <div class="card"><h3>No dependencies, on purpose</h3><p>Every “why not X” has the same answer: a quiz engine needs ~600 lines, not a dependency tree. Nothing to audit, nothing to break on major releases, 8.8 KB total.</p><span class="sig">package.json → "dependencies": {}</span></div>
+        <div class="card"><h3>ES5-compatible source</h3><p>No arrow functions, no classes, no transpiler. The only ES6 API used is <code>Object.assign</code> (one-line polyfill for IE11, if anyone still needs it). The source <em>is</em> the build.</p><span class="sig">src/core.js → dist/ (wrapper only)</span></div>
+        <div class="card"><h3>Direct DOM, no vdom</h3><p>One question is ~20 <code>createElement</code> calls and one delegated listener. Re-render per state change is instantaneous at this scale — React would cost 40× the bytes for the same 60 fps.</p><span class="sig">render() → root.textContent='' → build → append</span></div>
+        <div class="card"><h3>Client-only, zero telemetry</h3><p>No network calls anywhere in the engine — banks are your files, results are your callbacks, storage is your choice. Works from <code>file://</code>, offline, in a kiosk.</p><span class="sig">fetch: 0 · XHR: 0 · beacons: 0</span></div>
+        <div class="card"><h3>a11y as a feature</h3><p><code>role="radiogroup"/"radio"</code> + <code>aria-checked</code> options, <code>aria-live</code> result announcements, visible focus, keyboard-complete flow, <code>prefers-reduced-motion</code> respected by the host docs.</p><span class="sig">Tab / Enter / Space — everywhere</span></div>
+      </div>
+
+      <h3 class="sub-h">Repository layout &amp; size budget</h3>
+      <div class="split">
+        <div class="pane">
+          <h3>files</h3>
+          <div class="code" id="code-tree">src/core.js        <i>the engine — single source of truth</i>
+build.mjs          <i>wraps src → UMD + ESM (no transpile)</i>
+dist/qkc-engine.js   <i>UMD build, committed</i>
+dist/qkc-engine.mjs  <i>ESM build, committed</i>
+engine.js          <i>root copy → qkc.js.org/engine.js</i>
+index.html         <i>this docs site</i>
+style.css          <i>docs styles (3 themes)</i>
+site.js            <i>docs wiring — runs the real dist</i>
+demo-bank.js       <i>real bank excerpt (7·algebra·q1)</i>
+test/test.mjs      <i>headless core tests (node)</i>
+test/dom.mjs       <i>widget tests (jsdom)</i></div>
+        </div>
+        <div class="pane">
+          <h3>where the 8.8 KB go</h3>
+          <div class="tbl-wrap" style="margin-top:0"><table>
+            <thead><tr><th>part</th><th>share</th><th>notes</th></tr></thead>
+            <tbody>
+              <tr><td>headless core</td><td class="mono">~35%</td><td>rng, traversal, validate, build/score</td></tr>
+              <tr><td>widget JS</td><td class="mono">~40%</td><td>renderers, events, lifecycle, i18n dicts</td></tr>
+              <tr><td>widget CSS</td><td class="mono">~25%</td><td>injected once as a string</td></tr>
+              <tr><td>dependencies</td><td class="mono">0 KB</td><td>there are none</td></tr>
+            </tbody>
+          </table></div>
+          <p class="pane-note" style="margin-top:10px">Raw UMD: 31 KB. Brotli/gzip: ~8.8 KB — less than most fonts load. Browser support: evergreen Chrome/Firefox/Safari/Edge; jsdom for tests; Node ≥ 14 for the headless core.</p>
+        </div>
+      </div>
   </section>
 
-  <!-- ═══ 07 NPM ═══ -->
-  <section id="npm">
-    <div class="wrap">
-      <span class="kicker">07 · npm</span>
-      <h2>npm install qkc-engine</h2>
-      <p class="sec-sub">UMD + ESM in one package, <code>dist/</code> committed to the repo — a git or CDN install
-        works today, exactly like the npm one.</p>
+  <!-- ═══ 11 RECIPES ═══ -->
+  <section id="recipes">
+      <span class="kicker">11 · recipes</span>
+      <h2>Copied-from-production patterns.</h2>
+      <p class="sec-sub">Short, complete, honest — each snippet runs against the documented API, no pseudo-code.</p>
+      <div class="cols">
+        <div class="pane">
+          <h3>hide answers from the client</h3>
+          <div class="code" id="code-r1"><i>// server / build time:</i>
+<b>const</b> test = eng.build({ quarter: 1, seed: req.session.seed });
+res.json(test.items.map(({ c, ...safe }) =&gt; safe));
+
+<i>// server, on submit — answers never lived on the client:</i>
+<b>const</b> result = eng.score(test, req.body.answers);</div>
+          <button class="copy" data-copy="code-r1" type="button">copy</button>
+        </div>
+        <div class="pane">
+          <h3>persist progress in localStorage</h3>
+          <div class="code" id="code-r2">QKC.init({
+  bank, el: '#quiz', seed: todaySeed(),
+  onFinish: r =&gt; localStorage.setItem(
+    'quiz:' + todaySeed(),
+    JSON.stringify({ pct: r.pct, perTopic: r.perTopic,
+                     at: Date.now() })
+  )
+});
+<i>// replay history → chart perTopic over time</i></div>
+          <button class="copy" data-copy="code-r2" type="button">copy</button>
+        </div>
+        <div class="pane">
+          <h3>load a bank at runtime (fetch)</h3>
+          <div class="code" id="code-r3"><b>const</b> res  = <b>await</b> fetch('/banks/algebra-7.json');
+<b>const</b> bank = <b>await</b> res.json();
+<b>const</b> v = QKC.validate(bank);
+<b>if</b> (!v.ok) <b>throw new</b> Error(v.errors[0]);
+QKC.init({ bank, el: '#quiz', count: 15 });</div>
+          <button class="copy" data-copy="code-r3" type="button">copy</button>
+        </div>
+        <div class="pane">
+          <h3>same test for everyone (exam day)</h3>
+          <div class="code" id="code-r4"><i>// a date-string seed = one canonical variant</i>
+QKC.init({ bank, el: '#quiz', mode: 'exam',
+  seed: 'control-work-2026-10-15', count: 20 });
+
+<i>// variant B for the other row — one character apart:</i>
+QKC.init({ bank, el: '#quiz2', mode: 'exam',
+  seed: 'control-work-2026-10-15-B', count: 20 });</div>
+          <button class="copy" data-copy="code-r4" type="button">copy</button>
+        </div>
+        <div class="pane">
+          <h3>telemetry via onAnswer (yours, not ours)</h3>
+          <div class="code" id="code-r5">QKC.init({ bank, el: '#quiz', onAnswer: a =&gt; {
+  navigator.sendBeacon?.('/analytics', JSON.stringify({
+    q: a.item.t, topic: a.item.tp,
+    ok: a.correct, skipped: a.skipped, ts: Date.now()
+  }));
+}});
+<i>// the engine itself sends nothing, ever</i></div>
+          <button class="copy" data-copy="code-r5" type="button">copy</button>
+        </div>
+        <div class="pane">
+          <h3>headless grading in CI (Node)</h3>
+          <div class="code" id="code-r6"><b>import</b> QKC from 'qkc-engine';
+<b>import</b> bank from './banks/informatics-9.json' assert { type: 'json' };
+
+<b>const</b> v = QKC.engine(bank).validate();
+<b>if</b> (!v.ok) { console.error(v.errors); process.exit(1); }
+console.log('bank OK:', QKC.toArray(bank).length, 'items');</div>
+          <button class="copy" data-copy="code-r6" type="button">copy</button>
+        </div>
+      </div>
+  </section>
+
+  <!-- ═══ 12 QUALITY ═══ -->
+  <section id="quality">
+      <span class="kicker">12 · testing &amp; quality</span>
+      <h2>Small engine, serious tests.</h2>
+      <p class="sec-sub">Two suites run on every change — headless logic in pure Node, widget behavior in jsdom.
+        No mocks of our own code: the DOM suite drives the real <code>dist/</code> build with real clicks.</p>
+      <div class="split">
+        <div class="pane">
+          <h3>run them</h3>
+          <div class="code" id="code-tests"><b>npm test</b>
+<i># = node build.mjs && node test/test.mjs && node test/dom.mjs</i>
+
+<b>node</b> test/test.mjs   <i># headless core, zero deps</i>
+<b>node</b> test/dom.mjs     <i># widget in jsdom</i></div>
+          <button class="copy" data-copy="code-tests" type="button">copy</button>
+        </div>
+        <div class="pane">
+          <h3>what is covered</h3>
+          <div class="prose" style="margin-top:0"><ul>
+            <li><b>core:</b> filters &amp; counts, topics histogram, validation errors, seeded reproducibility (same seed → same test), scoring (correct/wrong/skip/pct/perTopic), option shuffle keeps <code>c</code> inside <code>o</code>, flat-array and container banks.</li>
+            <li><b>widget:</b> full pass to 100% in normal mode, wrong-answer reveal, exam navigation + partial score, sprint attributes &amp; countdown, invalid/empty bank error cards, container auto-flatten, <code>update()</code>/<code>destroy()</code>/<code>restart()</code>, RU/EN strings, theme attributes, <code>onFinish</code> and <code>onAnswer</code> semantics per mode.</li>
+          </ul></div>
+        </div>
+      </div>
+      <div class="api">
+        <div class="card"><h3>Semver, kept</h3><p>Public surface = the tables in §03. Additive changes → minor; breaking → major + migration note in CHANGELOG. <code>QKC.VERSION</code> always tells the truth.</p><span class="sig">1.2.0 — onAnswer added, nothing removed</span></div>
+        <div class="card"><h3>dist/ is committed</h3><p>Consumers never need a build step: clone, link or CDN the repo and the exact tested bytes are there. build.mjs only wraps <code>src/core.js</code> — no transpilation, no minifier eating stack traces.</p><span class="sig">src == dist, byte-auditable</span></div>
+        <div class="card"><h3>Battle-tested at 42 823</h3><p>The QKC trainer runs this engine's rules over 147 grade×subject banks daily — flattening, filtering and seeding at that scale is the performance baseline.</p><span class="sig">O(n) traversal · O(1) per answer</span></div>
+      </div>
+  </section>
+
+  <!-- ═══ 13 INSTALL ═══ -->
+  <section id="install">
+      <span class="kicker">13 · install &amp; npm</span>
+      <h2>Four ways in, same bytes.</h2>
+      <p class="sec-sub"><code>dist/</code> is committed to the repo, so git and CDN installs work today and are
+        byte-identical to the npm one. The package ships UMD (<code>main</code>) + ESM (<code>module</code>/<code>exports</code>),
+        <code>unpkg</code> and <code>jsdelivr</code> fields included.</p>
       <div class="cols">
         <div>
           <div class="code" id="code-npm"><i># npm registry</i>
 <b>npm install qkc-engine</b>
 
-<i># or straight from git</i>
+<i># or straight from git — works today</i>
 <b>npm install github:spaj7468-cell/qkc-engine</b>
 
 <i># or a CDN — no npm at all</i>
 &lt;<b>script</b> src="https://cdn.jsdelivr.net/gh/spaj7468-cell/qkc-engine@main/dist/qkc-engine.js"&gt;&lt;/<b>script</b>&gt;
-&lt;<b>script</b> src="https://qkc.js.org/engine.js"&gt;&lt;/<b>script</b>&gt;</div>
+
+<i># or the domain entry point (js.org, pending PR #12650)</i>
+&lt;<b>script</b> src="https://qkc.js.org/engine.js"&gt;&lt;/<b>script</b>&gt;
+<i># mirror that works right now:</i>
+&lt;<b>script</b> src="https://spaj7468-cell.github.io/qkc-engine/dist/qkc-engine.js"&gt;&lt;/<b>script</b>&gt;</div>
           <button class="copy" data-copy="code-npm" type="button">copy</button>
         </div>
         <div>
@@ -364,6 +1093,8 @@ onBeforeUnmount(() =&gt; inst?.destroy());
 
 <i>// ESM / bundlers (Vite, esbuild, webpack, Rollup…)</i>
 <b>import</b> QKC from 'qkc-engine';
+<i>// named exports work too:</i>
+<b>import</b> { engine, validate, rng, init } from 'qkc-engine';
 
 <i>// everything is there:</i>
 QKC.init({ bank, el: '#quiz' });   <i>// embeddable widget</i>
@@ -374,29 +1105,84 @@ QKC.rng(seed);                     <i>// seeded PRNG</i></div>
           <button class="copy" data-copy="code-use" type="button">copy</button>
         </div>
       </div>
-    </div>
+      <p class="tbl-note">Package contents (<code>files</code>): <code>dist/</code>, <code>src/</code>, <code>engine.js</code>, README, LICENSE, CHANGELOG. No postinstall scripts, no telemetry, no surprises.</p>
   </section>
 
-  <!-- ═══ 08 LICENSE ═══ -->
+  <!-- ═══ 14 FAQ ═══ -->
+  <section id="faq">
+      <span class="kicker">14 · faq</span>
+      <h2>Straight answers.</h2>
+      <div class="faq">
+        <details><summary>Do I need a build step, bundler or framework?</summary><div class="a"><p>No. <code>dist/</code> is committed; a <code>&lt;script&gt;</code> tag is enough. Bundlers work too (UMD + ESM + <code>exports</code> map), but nothing requires them. The docs site you are reading is itself plain HTML/CSS/JS with no build.</p></div></details>
+        <details><summary>I want my own UI. Is the widget optional?</summary><div class="a"><p>Completely. <code>QKC.engine(bank)</code> is pure logic: <code>build()</code> gives you a test object, <code>score()</code> grades answers, <code>validate()/count()/topics()</code> introspect the bank. <code>QKC.init()</code> is a convenience layer you can ignore — it shares the same core.</p></div></details>
+        <details><summary>Where do correct answers live? Can students cheat?</summary><div class="a"><p>Client-side, inside your bank — like every offline-first quiz library. For graded exams, build the test server-side (the core runs in Node), strip <code>c</code> before sending items, and score on the server with <code>eng.score()</code> — see the recipe in §11. For practice widgets, cheating only cheats yourself.</p></div></details>
+        <details><summary>How exactly are answers compared?</summary><div class="a"><p><code>QKC.norm()</code>: trim → lowercase → collapse whitespace runs → replace <code>,</code> with <code>.</code>, then strict string equality. <code>' Paris '</code> = <code>'paris'</code>; <code>'3,5'</code> = <code>'3.5'</code>. No fuzzy matching, no regex per question — deterministic and explainable.</p></div></details>
+        <details><summary>Same quiz every launch, or different every time?</summary><div class="a"><p>Your choice via <code>seed</code>: a fixed string/number reproduces the exact quiz (questions <em>and</em> option order); omit it and the engine seeds from the clock. Reproducibility is the point — an exam variant must be replayable for auditing.</p></div></details>
+        <details><summary>Multiple widgets on one page?</summary><div class="a"><p>Yes — every <code>init()</code> is independent; the stylesheet is injected once and shared. Ten demos on this page prove it (hero, quick start, live demo, three type cards, three theme cards, playground).</p></div></details>
+        <details><summary>React / Vue / Svelte / Angular / web components?</summary><div class="a"><p>The widget is plain DOM with a <code>destroy()</code> — it fits any lifecycle. §09 has copy-paste wrappers for React (<code>useEffect</code>), Vue 3 (<code>onMounted</code>) and a framework-neutral custom element; Svelte's <code>onMount</code>/<code>onDestroy</code> and Angular's <code>ngOnInit</code>/<code>ngOnDestroy</code> follow the identical two-line pattern.</p></div></details>
+        <details><summary>TypeScript?</summary><div class="a"><p>No <code>.d.ts</code> yet (roadmap). The API surface is small and fully tabulated in §03; until typings ship, a 20-line declaration file covers it — the option and result shapes are documented field by field.</p></div></details>
+        <details><summary>Any analytics, phones home, licenses to worry about?</summary><div class="a"><p>Zero network calls in the engine; zero trackers on this site; MIT license for everything — engine, widget, docs, and the trainer's banks. Use it in commercial products without attribution (appreciated, not required).</p></div></details>
+        <details><summary>How big can a bank get?</summary><div class="a"><p>The QKC trainer runs 42 823 items across 147 grade×subject partitions on this exact format, on school-grade hardware, offline. Flattening and filtering are O(n) once per init; per-answer work is O(1). Beyond ~100K items per screen, split banks per grade/subject into separate files (lazy-load, recipe §11).</p></div></details>
+        <details><summary>What does BETA mean here?</summary><div class="a"><p>The API is stable and tested, but pre-1.0-style guarantees don't exist yet: minor versions may add options, and <code>.d.ts</code>/npm-registry publication are still in flight. Breaking changes, if ever, come with a major bump and a migration note.</p></div></details>
+        <details><summary>Why qkc.js.org? What is this domain?</summary><div class="a"><p><b>js.org</b> grants subdomains to JavaScript-ecosystem projects (npm packages, libraries, tools). This site is the documentation of one such library — <code>qkc-engine</code> — and nothing else: no school catalogue, no unrelated content, no redirects. The subdomain follows js.org's naming guidance for project pages (repository name without its suffix, cf. their “foo-lib → foo” example); the request is public: <a href="https://github.com/js-org/js.org/pull/12650" rel="noopener">js-org/js.org#12650</a>. Until it merges, the mirror at <code>spaj7468-cell.github.io/qkc-engine</code> serves identical content.</p></div></details>
+      </div>
+  </section>
+
+  <!-- ═══ 15 CHANGELOG ═══ -->
+  <section id="changelog">
+      <span class="kicker">15 · changelog</span>
+      <h2>What changed, when.</h2>
+      <p class="sec-sub">Full details in <a href="https://github.com/spaj7468-cell/qkc-engine/blob/main/CHANGELOG.md" rel="noopener">CHANGELOG.md</a>. Semver; <code>QKC.VERSION</code> reports the loaded build.</p>
+      <div class="rel">
+        <article>
+          <h3>1.2.0 <span class="d">2026-10-05</span></h3>
+          <ul>
+            <li><b><code>onAnswer</code> callback</b> — per-answer events <code>{ id, value, correct, skipped, item }</code>; normal fires on check, sprint on select/timeout, exam as a batch at finish.</li>
+            <li><b>Docs site v2</b> — full API reference (every option, field and return shape), in-page REPL against the real build, live event console, question-type and theme galleries, five architecture diagrams, recipes, FAQ, changelog, site themes dark/light/b/w, sticky TOC with scroll-spy and filter, mobile drawer.</li>
+            <li><code>sprintTimeout</code> hardening; tests extended for <code>onAnswer</code> semantics in all three modes.</li>
+          </ul>
+        </article>
+        <article>
+          <h3>1.1.0 <span class="d">2026-10-05</span></h3>
+          <ul>
+            <li><b><code>QKC.init()</code> embeddable widget</b>: question flow, three answer types, explanations, progress, result screen with per-topic stats; returns <code>{ root, mount, restart, update, destroy, results }</code>.</li>
+            <li>Own scoped CSS injected at runtime · 3 modes (normal/exam/sprint) · 3 themes (bw/light/dark) · RU/EN dictionaries with autodetect.</li>
+            <li>Banks accepted as flat array, <code>{items}</code> or nested container (<code>QKC.toArray</code>); a11y: radiogroup semantics, aria-live, keyboard-complete.</li>
+            <li>Root <code>engine.js</code> entry point; jsdom DOM test suite.</li>
+          </ul>
+        </article>
+        <article>
+          <h3>1.0.0 <span class="d">2026-10-05</span></h3>
+          <ul>
+            <li>First public release: headless <code>engine(bank)</code> — <code>build / score / validate / count / topics</code>, <code>rng</code>, <code>items</code>, <code>norm</code>.</li>
+            <li>Seeded reproducible assembly (mulberry32 + FNV-1a) · UMD + ESM builds · bank schema v1 (grade → subject → quarter, topic slicing).</li>
+          </ul>
+        </article>
+      </div>
+  </section>
+
+  <!-- ═══ 16 LICENSE ═══ -->
   <section id="license">
-    <div class="wrap">
-      <span class="kicker">08 · license &amp; source</span>
+      <span class="kicker">16 · license &amp; source</span>
       <h2>MIT. All of it.</h2>
-      <p class="sec-sub">Engine, widget, banks of the trainer, this site — MIT licensed, © 2026 OuRi Corp.
-        Fork it, vendor it, ship it in your product. Attribution appreciated, not required.</p>
+      <p class="sec-sub">Engine, widget, this documentation site, and the 42 823-question banks of the trainer —
+        MIT licensed, © 2026 OuRi Corp. Fork it, vendor it, ship it in your product.
+        Attribution appreciated, not required.</p>
       <div class="acts">
         <a class="btn btn--primary" href="https://github.com/spaj7468-cell/qkc-engine" rel="noopener">spaj7468-cell/qkc-engine</a>
         <a class="btn" href="https://github.com/spaj7468-cell/qkc-engine/blob/main/LICENSE" rel="noopener">LICENSE (MIT)</a>
         <a class="btn" href="https://github.com/spaj7468-cell/qkc-engine/blob/main/CHANGELOG.md" rel="noopener">CHANGELOG</a>
         <a class="btn" href="https://github.com/spaj7468-cell/qkc-engine/issues" rel="noopener">Report an issue</a>
       </div>
-    </div>
+      <div class="cols" style="margin-top:22px">
+        <div class="card"><h3>Contribute</h3><p>Banks are data — PR a JSON array. Engine changes: keep zero dependencies, keep the tests green (<code>npm test</code>), keep semver honest. Issues welcome, even “the docs confused me” ones — especially those.</p><span class="sig">github.com/spaj7468-cell/qkc-engine/issues</span></div>
+        <div class="card"><h3>About this domain</h3><p><b>qkc.js.org</b> is a requested js.org subdomain for this JavaScript library's documentation (PR <a href="https://github.com/js-org/js.org/pull/12650" rel="noopener">#12650</a>), per js.org content rules: directly JS-ecosystem related, substantive, focused, no auto-redirects. Live mirror while pending: <a href="https://spaj7468-cell.github.io/qkc-engine/" rel="noopener">spaj7468-cell.github.io/qkc-engine</a>.</p><span class="sig">js.org — dedicated to JavaScript and its community</span></div>
+      </div>
   </section>
 
-  <!-- ═══ 09 TRAINER ═══ -->
+  <!-- ═══ 17 TRAINER ═══ -->
   <section id="trainer">
-    <div class="wrap">
-      <span class="kicker">09 · built with this engine</span>
+      <span class="kicker">17 · built with this engine</span>
       <h2>The engine's biggest consumer.</h2>
       <div class="prod">
         <div>
@@ -408,26 +1194,22 @@ QKC.rng(seed);                     <i>// seeded PRNG</i></div>
         <a class="btn btn--primary" href="https://spaj7468-cell.github.io/qkc/" rel="noopener">Open the trainer →</a>
       </div>
       <div class="cols" style="margin-top:14px">
-        <div class="card"><h3>repo 1 · qkc-engine</h3><p>The reusable core you are reading about: widget, build/score/validate, seeded RNG, bank schema. Zero dependencies.</p><span class="sig">github.com/spaj7468-cell/qkc-engine · npm: qkc-engine</span></div>
-        <div class="card"><h3>repo 2 · qkc</h3><p>The trainer app: banks, screens, PWA shell, solvers, achievements. Consumes the engine's rules and format.</p><span class="sig">github.com/spaj7468-cell/qkc · live: spaj7468-cell.github.io/qkc</span></div>
+        <div class="card"><h3>repo 1 · qkc-engine</h3><p>The reusable core you are reading about: widget, build/score/validate, seeded RNG, bank schema. Zero dependencies, MIT.</p><span class="sig">github.com/spaj7468-cell/qkc-engine · npm: qkc-engine</span></div>
+        <div class="card"><h3>repo 2 · qkc</h3><p>The trainer app: banks, screens, PWA shell, solvers, achievements. Consumes the engine's rules and format — one person + one AI, transparently.</p><span class="sig">github.com/spaj7468-cell/qkc · live: spaj7468-cell.github.io/qkc</span></div>
       </div>
-    </div>
   </section>
+
+    </div><!-- /content -->
+  </div><!-- /layout -->
 </main>
 
 <footer>
   <div class="wrap">
-    <span>© 2026 OuRi Corp · QKC Engine v1.1.0 · MIT license · BETA</span>
-    <span class="mono"><a href="https://github.com/spaj7468-cell/qkc-engine">source</a> · <a href="https://github.com/spaj7468-cell/qkc-engine/blob/main/CHANGELOG.md">changelog</a> · <a href="https://spaj7468-cell.github.io/qkc/">trainer</a> · <a href="https://spaj7468-cell.github.io/qkc/corp/">OuRi Corp</a></span>
+    <span>© 2026 OuRi Corp · QKC Engine v1.2.0 · MIT license · BETA · no trackers, no cookies</span>
+    <span class="mono"><a href="https://github.com/spaj7468-cell/qkc-engine">source</a> · <a href="https://github.com/spaj7468-cell/qkc-engine/blob/main/CHANGELOG.md">changelog</a> · <a href="https://github.com/spaj7468-cell/qkc-engine/issues">issues</a> · <a href="https://spaj7468-cell.github.io/qkc/">trainer</a> · <a href="https://spaj7468-cell.github.io/qkc/corp/">OuRi Corp</a></span>
   </div>
 </footer>
 
-<!-- raw text for the copy button (kept out of the highlighted block) -->
-<template id="code-quick-raw">&lt;script src="https://qkc.js.org/engine.js"&gt;&lt;/script&gt;
-&lt;script src="bank-7.js"&gt;&lt;/script&gt;
-&lt;div id="quiz"&gt;&lt;/div&gt;
-&lt;script&gt;
-  QKC.init({ bank: window.OURI_BANKS[7].algebra[1] });
-&lt;/script&gt;</template>
+<button id="toTop" type="button" aria-label="Back to top">↑</button>
 </body>
 </html>
