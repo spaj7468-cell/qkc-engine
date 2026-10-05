@@ -25,6 +25,9 @@ export const engine = QKC.engine;
 export const validate = QKC.validate;
 export const items = QKC.items;
 export const rng = QKC.rng;
+export const init = QKC.init;
+export const toArray = QKC.toArray;
+export const STR = QKC.STR;
 `;
 
 writeFileSync(join(here, 'dist/qkc-engine.js'), umd);

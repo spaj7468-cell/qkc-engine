@@ -1,113 +1,114 @@
 # QKC Engine
 
-**Dependency-free JavaScript quiz engine.** Assembles, serves and scores knowledge-check
-tests from strictly partitioned question banks: `grade → subject → term → topic`.
-One plain file, UMD + ESM, **zero runtime dependencies**, MIT licensed.
+**Dependency-free quiz engine for the web.** Vanilla JS. No build step. MIT. Embed quizzes in any page.
 
-This is the core behind the [QKC trainer](https://spaj7468-cell.github.io/qkc/)
-(42 823 questions, grades K–11, 147 grade×subject combinations, offline PWA).
-The trainer is the engine's biggest consumer; this repository is the engine on its own —
-for anyone who wants the same mechanics in their own project.
+[![version](https://img.shields.io/badge/version-1.1.0-black)](https://github.com/spaj7468-cell/qkc-engine/releases)
+[![deps](https://img.shields.io/badge/dependencies-0-black)](https://github.com/spaj7468-cell/qkc-engine/blob/main/package.json)
+[![license](https://img.shields.io/badge/license-MIT-black)](./LICENSE)
 
-- **Docs & playground:** <https://spaj7468-cell.github.io/qkc-engine/>
-- **License:** MIT · **Author:** OuRi Corp
+`qkc-engine` is the open core of the [QKC trainer](https://spaj7468-cell/qkc/) — a school quiz app with
+42 823 questions. Two layers, one file:
 
----
+1. **Headless core** — seeded, reproducible quiz assembly and scoring over strictly partitioned
+   question banks (`grade → subject → quarter → topic`).
+2. **`QKC.init()`** — a tiny embeddable widget (own scoped CSS injected at runtime):
+   3 modes (`normal` / `exam` / `sprint`), 3 themes (`bw` / `light` / `dark`), RU/EN UI, a11y-complete.
 
-## Install
+Live docs + playground: **[qkc.js.org](https://qkc.js.org)** (pending) ·
+[mirror](https://spaj7468-cell.github.io/qkc-engine/)
 
-```bash
-# npm / pnpm / yarn — straight from git
-npm install github:spaj7468-cell/qkc-engine
-```
+## Quick start
 
 ```html
-<!-- classic script: window.QKC -->
-<script src="https://cdn.jsdelivr.net/gh/spaj7468-cell/qkc-engine@main/dist/qkc-engine.js"></script>
-
-<!-- or as an ES module -->
-<script type="module">
-  import QKC from 'https://cdn.jsdelivr.net/gh/spaj7468-cell/qkc-engine@main/dist/qkc-engine.mjs';
+<script src="https://qkc.js.org/engine.js"></script>
+<div id="quiz"></div>
+<script>
+  QKC.init({ bank: window.OURI_BANKS[7].algebra[1] });
 </script>
 ```
 
+or via npm:
+
+```sh
+npm install qkc-engine
+```
+
 ```js
-// CommonJS
-const QKC = require('qkc-engine');
-// ESM / bundlers
 import QKC from 'qkc-engine';
+
+QKC.init({
+  bank: [
+    { t: '2 + 2 = ?', ty: 'choice', o: ['3', '4', '5'], c: '4', e: 'Basics.', tp: 'arithmetic' },
+    { t: 'Arrays are objects.', ty: 'bool', c: 'true', e: 'typeof [] === "object".', tp: 'js' },
+  ],
+  el: '#quiz',
+  mode: 'normal',   // 'normal' | 'exam' | 'sprint'
+  theme: 'bw',      // 'bw' | 'light' | 'dark'
+  lang: 'en',       // 'ru' | 'en' (default: autodetect)
+  count: 10,
+  seed: 'spring-2026',          // same seed → same quiz
+  onFinish: r => console.log(r.pct, r.perTopic),
+});
+// → { root, restart(o?), update(o?), destroy(), results() }
 ```
 
-## Quickstart
+## Bank format
 
-```js
-const eng  = QKC.engine(bank);            // bank: { grade: { subject: { quarter: [items] } } }
-const test = eng.build({ grade: 5, subject: 'math', quarter: 1, count: 10, seed: 'demo' });
-const safe = test.items.map(({ c, ...i }) => i);   // strip answers before sending to a client
-const res  = eng.score(test, answers);             // answers: { [itemId]: value }
-console.log(res.pct, res.perTopic);
-```
-
-Same `seed` → same test, every time (mulberry32 + FNV-1a seed hash). Options are shuffled
-deterministically per seed.
-
-## API
-
-| call | returns | notes |
-|---|---|---|
-| `QKC.engine(bank)` | `Engine` | bank is never mutated |
-| `engine.build(opts)` | `Test` | `opts`: `{ grade?, subject?, quarter?\|'all', topics?, count?, seed? }` |
-| `engine.score(test, answers)` | `Result` | `{ correct, wrong, skip, total, pct, perTopic }`; values compared trimmed, case-insensitive, `,` ≡ `.` |
-| `engine.validate()` | `{ ok, errors[] }` | structural audit of the whole bank |
-| `engine.count(filter?)` | `number` | items matching the filter |
-| `engine.topics(filter?)` | `{ topic, count }[]` | topic slices inside the filter |
-| `QKC.items(bank, filter?)` | `Item[]` | raw filtered list |
-| `QKC.rng(seed)` | `{ next, int, pick }` | seeded PRNG |
-| `QKC.norm(value)` | `string` | the exact normalisation `score` uses |
-
-## Bank schema (v1)
-
-Partitioning is **structural**: an item lives at exactly one `grade → subject → quarter`
-path, so a term can never leak into another term's test. Topics slice inside a term.
-
-```json
-{
-  "5": { "math": { "1": [
-    { "t": "x + 7 = 41. x = ?", "ty": "input",  "c": "34", "e": "x = 41 − 7 = 34.", "tp": "equations", "q": 1 },
-    { "t": "LCM(8, 6) = ?",     "ty": "choice", "c": "24", "e": "LCM(8,6) = 24.",   "tp": "divisibility", "q": 1,
-      "o": ["6", "8", "24", "48"] }
-  ] } }
-}
-```
+A question is a plain object; a bank is an array (or the nested container `{grade:{subject:{quarter:[items]}}}`):
 
 | field | type | meaning |
 |---|---|---|
 | `t` | string | question text |
 | `ty` | `'choice' \| 'bool' \| 'input'` | answer type |
-| `c` | string | correct answer (server-side; strip before clients see it) |
-| `o` | string[] | options, required for `choice` |
-| `e` | string | explanation shown after answering |
-| `tp` | string | topic inside the term |
-| `q` | number | term index (1–4, or 1–3 for trimesters) |
+| `o` | string[] | options — required for `choice` |
+| `c` | string | correct answer (compared trimmed, case/comma-insensitive) |
+| `e` | string | explanation shown after checking |
+| `tp` | string | topic (filters + per-topic stats) |
+| `q` | number, optional | quarter/term index inside a container |
 
-## Development
+## Headless API
 
-```bash
-git clone https://github.com/spaj7468-cell/qkc-engine
-cd qkc-engine
-npm test          # builds dist/ and runs the smoke suite (node, no deps)
-npm run build     # regenerate dist/qkc-engine.js (UMD) and dist/qkc-engine.mjs (ESM)
+```js
+const eng  = QKC.engine(bank);                    // bank: container or flat array
+const v    = eng.validate();                      // { ok, errors[] } — structural audit
+const test = eng.build({ grade: 7, subject: 'algebra', quarter: 1, count: 10, seed: 'demo' });
+const safe = test.items.map(({ c, ...i }) => i);  // strip answers before clients see them
+const res  = eng.score(test, answers);            // answers: { [itemId]: value }
+// res → { correct, wrong, skip, total, pct, perTopic }
+
+eng.count({ quarter: 1 });                        // introspection with the same filter object
+eng.topics({ subject: 'algebra' });               // [{ topic, count }, …]
+QKC.rng(seed);                                    // mulberry32 PRNG: { next, int, pick }
 ```
 
-Repo map: `src/core.js` (single source of truth) → `build.mjs` → `dist/*`;
-`index.html` + `style.css` + `playground.js` = the docs site (GitHub Pages);
-`test/test.mjs` = smoke suite.
+Everything is pure and synchronous: **same seed → same test**, down to option order.
 
-## Consumers
+## Repository layout
 
-- [QKC — Quick Knowledge Check](https://spaj7468-cell.github.io/qkc/) — school knowledge trainer
-  (BETA): K–11, 20 subjects, per-term banks, five test modes, offline PWA.
+```
+src/core.js        the engine (single source of truth, ES5-compatible)
+build.mjs          wraps src into dist/qkc-engine.js (UMD) + dist/qkc-engine.mjs (ESM)
+dist/              committed builds — consumers need no build step
+engine.js          root copy of the UMD build → https://qkc.js.org/engine.js
+index.html         this docs site (live demo, playground, guides) — plain HTML/CSS/JS
+site.js            docs-site wiring (runs the real dist build)
+demo-bank.js       real bank excerpt: OURI_BANKS[7].algebra[1] from the QKC trainer
+test/test.mjs      headless core tests (node)
+test/dom.mjs       widget DOM tests (jsdom)
+```
+
+```sh
+npm test     # build + headless tests + DOM tests
+npm run build
+```
+
+## Made with this engine
+
+- **[QKC — Quick Knowledge Check](https://spaj7468-cell.github.io/qkc/)** — school quiz trainer
+  (учебный тренажёр, построенный на этом движке): grades K–11, 20 subjects, 42 823 questions,
+  offline PWA, RU/EN. Repo: [`spaj7468-cell/qkc`](https://github.com/spaj7468-cell/qkc).
 
 ## License
 
-MIT © OuRi Corp — see [LICENSE](LICENSE).
+MIT © 2026 [OuRi Corp](https://spaj7468-cell.github.io/qkc/corp/) — see [LICENSE](./LICENSE).
+Status: **BETA**. Issues and PRs welcome.

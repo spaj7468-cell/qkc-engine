@@ -1,7 +1,7 @@
 {
   "name": "qkc-engine",
-  "version": "1.0.0",
-  "description": "Dependency-free JavaScript quiz engine: assemble, serve and score knowledge-check tests from strictly partitioned question banks (grade → subject → term → topic). UMD + ESM, no runtime dependencies.",
+  "version": "1.1.0",
+  "description": "Dependency-free JavaScript quiz engine: assemble, score and embed knowledge-check quizzes. QKC.init() renders a themeable widget (normal/exam/sprint, light/dark/bw, RU/EN) with zero dependencies. UMD + ESM, MIT.",
   "main": "dist/qkc-engine.js",
   "module": "dist/qkc-engine.mjs",
   "exports": {
@@ -11,12 +11,32 @@
       "default": "./dist/qkc-engine.js"
     }
   },
-  "files": ["dist", "src", "README.md", "LICENSE", "CHANGELOG.md"],
+  "files": [
+    "dist",
+    "src",
+    "engine.js",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
   "scripts": {
     "build": "node build.mjs",
-    "test": "node build.mjs && node test/test.mjs"
+    "test": "node build.mjs && node test/test.mjs && node test/dom.mjs"
   },
-  "keywords": ["quiz", "test", "exam", "education", "edtech", "engine", "question-bank", "assessment", "zero-dependency"],
+  "keywords": [
+    "quiz",
+    "test",
+    "exam",
+    "education",
+    "edtech",
+    "engine",
+    "question-bank",
+    "assessment",
+    "zero-dependency",
+    "widget",
+    "embed",
+    "vanilla-js"
+  ],
   "author": "OuRi Corp <juravlev.aleksandr2020@gmail.com>",
   "license": "MIT",
   "repository": {
@@ -24,5 +44,7 @@
     "url": "https://github.com/spaj7468-cell/qkc-engine.git"
   },
   "homepage": "https://github.com/spaj7468-cell/qkc-engine#readme",
-  "bugs": "https://github.com/spaj7468-cell/qkc-engine/issues"
+  "bugs": "https://github.com/spaj7468-cell/qkc-engine/issues",
+  "unpkg": "dist/qkc-engine.js",
+  "jsdelivr": "dist/qkc-engine.js"
 }

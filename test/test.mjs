@@ -26,7 +26,7 @@ const bank = {
   }
 };
 
-assert.equal(QKC.VERSION, '1.0.0');
+assert.equal(QKC.VERSION, '1.1.0');
 const eng = QKC.engine(bank);
 assert.equal(eng.count(), 6);
 assert.equal(eng.count({ quarter: 1 }), 4);
@@ -55,3 +55,19 @@ assert.equal(eng.score(test, {}).skip, 3);
 test.items.filter(i => i.ty === 'choice').forEach(i => assert.ok(i.o.includes(i.c)));
 
 console.log('all engine tests passed ✓');
+
+/* init/toArray presence */
+assert.equal(typeof QKC.init, 'function');
+assert.equal(typeof QKC.toArray, 'function');
+assert.deepEqual(QKC.toArray([{ t: 'a' }]).length, 1);
+assert.equal(QKC.toArray(bank).length, 6, 'toArray flattens containers');
+assert.equal(QKC.STR.ru.check, 'Проверить');
+assert.equal(QKC.STR.en.check, 'Check');
+
+/* validate now accepts flat arrays too */
+const flat = [{ t: '2+2=?', ty: 'input', c: '4', e: '', tp: 'arith' }];
+assert.equal(QKC.validate(flat).ok, true);
+assert.equal(QKC.validate([{ t: '', ty: 'nope', c: '' }]).ok, false);
+const engFlat = QKC.engine(flat);
+assert.equal(engFlat.count(), 1);
+assert.equal(engFlat.build({ count: 1, seed: 1 }).items[0].t, '2+2=?');
