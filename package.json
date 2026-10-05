@@ -1,0 +1,28 @@
+{
+  "name": "qkc-engine",
+  "version": "1.0.0",
+  "description": "Dependency-free JavaScript quiz engine: assemble, serve and score knowledge-check tests from strictly partitioned question banks (grade → subject → term → topic). UMD + ESM, no runtime dependencies.",
+  "main": "dist/qkc-engine.js",
+  "module": "dist/qkc-engine.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/qkc-engine.mjs",
+      "require": "./dist/qkc-engine.js",
+      "default": "./dist/qkc-engine.js"
+    }
+  },
+  "files": ["dist", "src", "README.md", "LICENSE", "CHANGELOG.md"],
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node build.mjs && node test/test.mjs"
+  },
+  "keywords": ["quiz", "test", "exam", "education", "edtech", "engine", "question-bank", "assessment", "zero-dependency"],
+  "author": "OuRi Corp <juravlev.aleksandr2020@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/spaj7468-cell/qkc-engine.git"
+  },
+  "homepage": "https://github.com/spaj7468-cell/qkc-engine#readme",
+  "bugs": "https://github.com/spaj7468-cell/qkc-engine/issues"
+}
