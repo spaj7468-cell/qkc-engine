@@ -157,7 +157,9 @@
         <div class="pane">
           <h3>index.html</h3>
           <div class="code" id="code-quick"><i>&lt;!-- 1. the engine (UMD, 8.8 KB gzip) --&gt;</i>
-&lt;<b>script</b> src="https://qkc.js.org/engine.js"&gt;&lt;/<b>script</b>&gt;
+&lt;<b>script</b> src="https://spaj7468-cell.github.io/qkc-engine/engine.js"&gt;&lt;/<b>script</b>&gt;
+<i>&lt;!-- CDN mirror: https://cdn.jsdelivr.net/gh/spaj7468-cell/qkc-engine@main/dist/qkc-engine.js --&gt;</i>
+<i>&lt;!-- after the js.org merge this also works: https://qkc.js.org/engine.js --&gt;</i>
 
 <i>&lt;!-- 2. your bank — any array of questions --&gt;</i>
 &lt;<b>script</b> src="bank-7.js"&gt;&lt;/<b>script</b>&gt;
@@ -719,7 +721,7 @@ QKC.validate(csvToBank(text)); <i>// audit first!</i></div>
       </div>
       <div class="tabpanes">
         <div class="code" id="tab-html"><i>&lt;!-- no bundler, no npm, no config --&gt;</i>
-&lt;<b>script</b> src="https://qkc.js.org/engine.js"&gt;&lt;/<b>script</b>&gt;
+&lt;<b>script</b> src="https://spaj7468-cell.github.io/qkc-engine/engine.js"&gt;&lt;/<b>script</b>&gt;
 &lt;<b>div</b> id="quiz"&gt;&lt;/<b>div</b>&gt;
 &lt;<b>script</b>&gt;
   <b>const</b> quiz = QKC.<b>init</b>({
@@ -935,7 +937,7 @@ console.log(res.pct + '%', res.perTopic);
 build.mjs          <i>wraps src → UMD + ESM (no transpile)</i>
 dist/qkc-engine.js   <i>UMD build, committed</i>
 dist/qkc-engine.mjs  <i>ESM build, committed</i>
-engine.js          <i>root copy → qkc.js.org/engine.js</i>
+engine.js          <i>root UMD copy → https://spaj7468-cell.github.io/qkc-engine/engine.js</i>
 index.html         <i>this docs site</i>
 style.css          <i>docs styles (3 themes)</i>
 site.js            <i>docs wiring — runs the real dist</i>
@@ -1070,6 +1072,16 @@ console.log('bank OK:', QKC.toArray(bank).length, 'items');</div>
       <p class="sec-sub"><code>dist/</code> is committed to the repo, so git and CDN installs work today and are
         byte-identical to the npm one. The package ships UMD (<code>main</code>) + ESM (<code>module</code>/<code>exports</code>),
         <code>unpkg</code> and <code>jsdelivr</code> fields included.</p>
+      <div class="tbl-wrap" style="margin-top:18px"><table>
+        <thead><tr><th>entry point</th><th>format</th><th>status</th><th>url</th></tr></thead>
+        <tbody>
+          <tr><td>GitHub Pages mirror</td><td>UMD (<code>&lt;script&gt;</code>)</td><td><b>works now</b></td><td><code>https://spaj7468-cell.github.io/qkc-engine/engine.js</code></td></tr>
+          <tr><td>GitHub Pages mirror</td><td>ESM (<code>import</code>)</td><td><b>works now</b></td><td><code>https://spaj7468-cell.github.io/qkc-engine/dist/qkc-engine.mjs</code></td></tr>
+          <tr><td>jsDelivr CDN</td><td>UMD</td><td><b>works now</b></td><td><code>https://cdn.jsdelivr.net/gh/spaj7468-cell/qkc-engine@main/dist/qkc-engine.js</code></td></tr>
+          <tr><td>git install</td><td>UMD + ESM</td><td><b>works now</b></td><td><code>npm i github:spaj7468-cell/qkc-engine</code></td></tr>
+          <tr><td>qkc.js.org</td><td>UMD</td><td>after js.org merge (PR #12650)</td><td><code>https://qkc.js.org/engine.js</code></td></tr>
+        </tbody>
+      </table></div>
       <div class="cols">
         <div>
           <div class="code" id="code-npm"><i># npm registry</i>
@@ -1078,11 +1090,18 @@ console.log('bank OK:', QKC.toArray(bank).length, 'items');</div>
 <i># or straight from git — works today</i>
 <b>npm install github:spaj7468-cell/qkc-engine</b>
 
-<i># or a CDN — no npm at all</i>
-&lt;<b>script</b> src="https://cdn.jsdelivr.net/gh/spaj7468-cell/qkc-engine@main/dist/qkc-engine.js"&gt;&lt;/<b>script</b>&gt;
+<i># WORKING TODAY — two entry points, zero npm:</i>
+<i># 1) UMD, classic script tag (GitHub Pages mirror):</i>
+&lt;<b>script</b> src="https://spaj7468-cell.github.io/qkc-engine/engine.js"&gt;&lt;/<b>script</b>&gt;
+<i># 2) ESM, module import:</i>
+<b>import</b> QKC from 'https://spaj7468-cell.github.io/qkc-engine/dist/qkc-engine.mjs';
 
-<i># or the domain entry point (js.org, pending PR #12650)</i>
-&lt;<b>script</b> src="https://qkc.js.org/engine.js"&gt;&lt;/<b>script</b>&gt;
+<i># CDN mirrors (same bytes):</i>
+&lt;<b>script</b> src="https://cdn.jsdelivr.net/gh/spaj7468-cell/qkc-engine@main/dist/qkc-engine.js"&gt;&lt;/<b>script</b>&gt;
+&lt;<b>script</b> src="https://unpkg.com/qkc-engine@1.2.0/dist/qkc-engine.js"&gt;&lt;/<b>script</b>&gt;
+
+<i># future short domain (js.org PR #12650, pending merge):</i>
+<i># https://qkc.js.org/engine.js</i>
 <i># mirror that works right now:</i>
 &lt;<b>script</b> src="https://spaj7468-cell.github.io/qkc-engine/dist/qkc-engine.js"&gt;&lt;/<b>script</b>&gt;</div>
           <button class="copy" data-copy="code-npm" type="button">copy</button>
