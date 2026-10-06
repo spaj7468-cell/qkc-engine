@@ -127,3 +127,4 @@ npm run build
 
 MIT © 2026 [OuRi Corp](https://spaj7468-cell.github.io/qkc/corp/) — see [LICENSE](./LICENSE).
 Status: **BETA**. Issues and PRs welcome.
+
