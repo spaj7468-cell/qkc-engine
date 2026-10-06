@@ -4,7 +4,7 @@
 - **`onAnswer(ev)` callback** — per-answer events `{ id, value, correct, skipped, item }`. Fires when an answer
   is graded: normal → on check, sprint → on select/timeout, exam → once per item at finish. Additive; nothing removed.
 - **`sprintTimeout` hardening** — the timed-out question is passed explicitly; no reliance on render-time closure.
-- **Docs site v2 (qkc.js.org)** — full library documentation in the npm-package style:
+- **Docs site v2 (engine.qkc.runs-on.dev)** — full library documentation in the npm-package style:
   - complete API reference: every `QKC.init()` option, instance member, result/test object shape,
     `engine()` methods and standalone helpers, each with defaults and semantics;
   - in-page **REPL** evaluating against the real build and the real bank excerpt;
@@ -33,7 +33,7 @@
   visible focus states.
 - Docs site rebuilt around the widget: live code→result demo with dev-style switches (mode/theme/lang),
   paste-your-bank playground with `QKC.validate()`, real bank excerpt (`demo-bank.js`), React/Vue embed guides.
-- Root-level `engine.js` (copy of the UMD build) — the `https://qkc.js.org/engine.js` entry point.
+- Root-level `engine.js` (copy of the UMD build) — the `https://engine.qkc.runs-on.dev/engine.js` entry point.
 - Tests: headless core suite + jsdom DOM suite for the widget (`test/test.mjs`, `test/dom.mjs`).
 
 ## 1.0.0 — 2026-10-05

@@ -15,9 +15,9 @@
    3 modes (`normal` / `exam` / `sprint`), 3 themes (`bw` / `light` / `dark`), RU/EN UI, a11y-complete,
    `onFinish(result)` and `onAnswer(ev)` event callbacks.
 
-Live docs, API reference, REPL & playground: **[qkc.js.org](https://qkc.js.org)** (js.org PR
-[#12650](https://github.com/js-org/js.org/pull/12650), pending) ·
-[mirror](https://spaj7468-cell.github.io/qkc-engine/)
+Live docs, API reference, REPL & playground: **https://engine.qkc.runs-on.dev**
+(claim pending — [zordhalo/runs-on.dev#310](https://github.com/zordhalo/runs-on.dev/pull/310)) ·
+**[mirror, works now](https://spaj7468-cell.github.io/qkc-engine/)**
 
 ### Docs map (on the site)
 
@@ -34,7 +34,7 @@ Live docs, API reference, REPL & playground: **[qkc.js.org](https://qkc.js.org)*
 ## Quick start
 
 ```html
-<!-- works today (GitHub Pages mirror); after the js.org merge: https://qkc.js.org/engine.js -->
+<!-- works today (GitHub Pages); after the runs-on.dev claim merges: https://engine.qkc.runs-on.dev/engine.js -->
 <script src="https://spaj7468-cell.github.io/qkc-engine/engine.js"></script>
 <div id="quiz"></div>
 <script>
@@ -106,7 +106,7 @@ src/core.js        the engine (single source of truth, ES5-compatible)
 build.mjs          wraps src into dist/qkc-engine.js (UMD) + dist/qkc-engine.mjs (ESM)
 dist/              committed builds — consumers need no build step
 engine.js          root copy of the UMD build → https://spaj7468-cell.github.io/qkc-engine/engine.js
-                     (short domain https://qkc.js.org/engine.js — after js.org PR #12650 merges)
+                     (short domain https://engine.qkc.runs-on.dev/engine.js — after runs-on.dev PR #310 merges)
 index.html         this docs site (live demo, playground, guides) — plain HTML/CSS/JS
 site.js            docs-site wiring (runs the real dist build)
 demo-bank.js       real bank excerpt: OURI_BANKS[7].algebra[1] from the QKC trainer

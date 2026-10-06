@@ -159,7 +159,7 @@
           <div class="code" id="code-quick"><i>&lt;!-- 1. the engine (UMD, 8.8 KB gzip) --&gt;</i>
 &lt;<b>script</b> src="https://spaj7468-cell.github.io/qkc-engine/engine.js"&gt;&lt;/<b>script</b>&gt;
 <i>&lt;!-- CDN mirror: https://cdn.jsdelivr.net/gh/spaj7468-cell/qkc-engine@main/dist/qkc-engine.js --&gt;</i>
-<i>&lt;!-- after the js.org merge this also works: https://qkc.js.org/engine.js --&gt;</i>
+<i>&lt;!-- after the runs-on.dev claim merges this also works: https://engine.qkc.runs-on.dev/engine.js --&gt;</i>
 
 <i>&lt;!-- 2. your bank — any array of questions --&gt;</i>
 &lt;<b>script</b> src="bank-7.js"&gt;&lt;/<b>script</b>&gt;
@@ -1079,7 +1079,7 @@ console.log('bank OK:', QKC.toArray(bank).length, 'items');</div>
           <tr><td>GitHub Pages mirror</td><td>ESM (<code>import</code>)</td><td><b>works now</b></td><td><code>https://spaj7468-cell.github.io/qkc-engine/dist/qkc-engine.mjs</code></td></tr>
           <tr><td>jsDelivr CDN</td><td>UMD</td><td><b>works now</b></td><td><code>https://cdn.jsdelivr.net/gh/spaj7468-cell/qkc-engine@main/dist/qkc-engine.js</code></td></tr>
           <tr><td>git install</td><td>UMD + ESM</td><td><b>works now</b></td><td><code>npm i github:spaj7468-cell/qkc-engine</code></td></tr>
-          <tr><td>qkc.js.org</td><td>UMD</td><td>after js.org merge (PR #12650)</td><td><code>https://qkc.js.org/engine.js</code></td></tr>
+          <tr><td>engine.qkc.runs-on.dev</td><td>UMD</td><td>after the runs-on.dev claim merges (PR #310)</td><td><code>https://engine.qkc.runs-on.dev/engine.js</code></td></tr>
         </tbody>
       </table></div>
       <div class="cols">
@@ -1100,8 +1100,8 @@ console.log('bank OK:', QKC.toArray(bank).length, 'items');</div>
 &lt;<b>script</b> src="https://cdn.jsdelivr.net/gh/spaj7468-cell/qkc-engine@main/dist/qkc-engine.js"&gt;&lt;/<b>script</b>&gt;
 &lt;<b>script</b> src="https://unpkg.com/qkc-engine@1.2.0/dist/qkc-engine.js"&gt;&lt;/<b>script</b>&gt;
 
-<i># future short domain (js.org PR #12650, pending merge):</i>
-<i># https://qkc.js.org/engine.js</i>
+<i># future short domain (runs-on.dev claim, PR #310 — pending merge):</i>
+<i># https://engine.qkc.runs-on.dev/engine.js</i>
 <i># mirror that works right now:</i>
 &lt;<b>script</b> src="https://spaj7468-cell.github.io/qkc-engine/dist/qkc-engine.js"&gt;&lt;/<b>script</b>&gt;</div>
           <button class="copy" data-copy="code-npm" type="button">copy</button>
@@ -1143,7 +1143,7 @@ QKC.rng(seed);                     <i>// seeded PRNG</i></div>
         <details><summary>Any analytics, phones home, licenses to worry about?</summary><div class="a"><p>Zero network calls in the engine; zero trackers on this site; MIT license for everything — engine, widget, docs, and the trainer's banks. Use it in commercial products without attribution (appreciated, not required).</p></div></details>
         <details><summary>How big can a bank get?</summary><div class="a"><p>The QKC trainer runs 42 823 items across 147 grade×subject partitions on this exact format, on school-grade hardware, offline. Flattening and filtering are O(n) once per init; per-answer work is O(1). Beyond ~100K items per screen, split banks per grade/subject into separate files (lazy-load, recipe §11).</p></div></details>
         <details><summary>What does BETA mean here?</summary><div class="a"><p>The API is stable and tested, but pre-1.0-style guarantees don't exist yet: minor versions may add options, and <code>.d.ts</code>/npm-registry publication are still in flight. Breaking changes, if ever, come with a major bump and a migration note.</p></div></details>
-        <details><summary>Why qkc.js.org? What is this domain?</summary><div class="a"><p><b>js.org</b> grants subdomains to JavaScript-ecosystem projects (npm packages, libraries, tools). This site is the documentation of one such library — <code>qkc-engine</code> — and nothing else: no school catalogue, no unrelated content, no redirects. The subdomain follows js.org's naming guidance for project pages (repository name without its suffix, cf. their “foo-lib → foo” example); the request is public: <a href="https://github.com/js-org/js.org/pull/12650" rel="noopener">js-org/js.org#12650</a>. Until it merges, the mirror at <code>spaj7468-cell.github.io/qkc-engine</code> serves identical content.</p></div></details>
+        <details><summary>Why engine.qkc.runs-on.dev? What is this domain?</summary><div class="a"><p><b>runs-on.dev</b> is an open registry of free subdomains claimed through a public GitHub repo — one name per account, records and ownership visible to everyone. This project claimed <code>qkc.runs-on.dev</code> and published an <code>engine</code> subdomain on it for this documentation; the claim is public: <a href="https://github.com/zordhalo/runs-on.dev/pull/310" rel="noopener">zordhalo/runs-on.dev#310</a>. The record is a CNAME to GitHub Pages, so the bytes served are identical to the mirror at <code>spaj7468-cell.github.io/qkc-engine</code>, which works right now while the claim is pending.</p></div></details>
       </div>
   </section>
 
@@ -1195,7 +1195,7 @@ QKC.rng(seed);                     <i>// seeded PRNG</i></div>
       </div>
       <div class="cols" style="margin-top:22px">
         <div class="card"><h3>Contribute</h3><p>Banks are data — PR a JSON array. Engine changes: keep zero dependencies, keep the tests green (<code>npm test</code>), keep semver honest. Issues welcome, even “the docs confused me” ones — especially those.</p><span class="sig">github.com/spaj7468-cell/qkc-engine/issues</span></div>
-        <div class="card"><h3>About this domain</h3><p><b>qkc.js.org</b> is a requested js.org subdomain for this JavaScript library's documentation (PR <a href="https://github.com/js-org/js.org/pull/12650" rel="noopener">#12650</a>), per js.org content rules: directly JS-ecosystem related, substantive, focused, no auto-redirects. Live mirror while pending: <a href="https://spaj7468-cell.github.io/qkc-engine/" rel="noopener">spaj7468-cell.github.io/qkc-engine</a>.</p><span class="sig">js.org — dedicated to JavaScript and its community</span></div>
+        <div class="card"><h3>About this domain</h3><p><b>engine.qkc.runs-on.dev</b> is a subdomain of the project's <a href="https://runs-on.dev" rel="noopener">runs-on.dev</a> claim — an open registry of free subdomains where ownership and DNS records are public. Claim PR: <a href="https://github.com/zordhalo/runs-on.dev/pull/310" rel="noopener">zordhalo/runs-on.dev#310</a>; the CNAME points at GitHub Pages. Live mirror while pending: <a href="https://spaj7468-cell.github.io/qkc-engine/" rel="noopener">spaj7468-cell.github.io/qkc-engine</a>.</p><span class="sig">built with JavaScript — zero dependencies, hand-written ES5 core</span></div>
       </div>
   </section>
 
@@ -1224,8 +1224,8 @@ QKC.rng(seed);                     <i>// seeded PRNG</i></div>
 
 <footer>
   <div class="wrap">
-    <span>© 2026 OuRi Corp · QKC Engine v1.2.0 · MIT license · BETA · no trackers, no cookies</span>
-    <span class="mono"><a href="https://github.com/spaj7468-cell/qkc-engine">source</a> · <a href="https://github.com/spaj7468-cell/qkc-engine/blob/main/CHANGELOG.md">changelog</a> · <a href="https://github.com/spaj7468-cell/qkc-engine/issues">issues</a> · <a href="https://spaj7468-cell.github.io/qkc/">trainer</a> · <a href="https://spaj7468-cell.github.io/qkc/corp/">OuRi Corp</a></span>
+    <span>© 2026 OuRi Corp · QKC Engine v1.2.0 · built with JavaScript · MIT license · BETA · no trackers, no cookies</span>
+    <span class="mono"><a href="https://github.com/spaj7468-cell/qkc-engine">source</a> · <a href="https://github.com/spaj7468-cell/qkc-engine/blob/main/CHANGELOG.md">changelog</a> · <a href="https://github.com/spaj7468-cell/qkc-engine/issues">issues</a> · <a href="https://spaj7468-cell.github.io/qkc/">trainer</a> · <a href="https://spaj7468-cell.github.io/ouri-corp/">OuRi Corp</a></span>
   </div>
 </footer>
 
