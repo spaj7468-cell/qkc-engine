@@ -6,8 +6,8 @@
 [![deps](https://img.shields.io/badge/dependencies-0-black)](https://github.com/spaj7468-cell/qkc-engine/blob/main/package.json)
 [![license](https://img.shields.io/badge/license-MIT-black)](./LICENSE)
 
-`qkc-engine` is the open core of the [QKC trainer](https://spaj7468-cell/qkc/) — a school quiz app with
-42 823 questions. Two layers, one file:
+`qkc-engine` is the open core of the [QKC trainer](https://spaj7468-cell.github.io/qkc/) and the
+[QKCcode](https://spaj7468-cell.github.io/qkccode/) coding school. Two layers, one file:
 
 1. **Headless core** — seeded, reproducible quiz assembly and scoring over strictly partitioned
    question banks (`grade → subject → quarter → topic`).
@@ -124,9 +124,14 @@ npm run build
 - **[QKC — Quick Knowledge Check](https://spaj7468-cell.github.io/qkc/)** — school quiz trainer
   (учебный тренажёр, построенный на этом движке): grades K–11, 20 subjects, 42 823 questions,
   offline PWA, RU/EN. Repo: [`spaj7468-cell/qkc`](https://github.com/spaj7468-cell/qkc).
+- **[QKCcode — QKC v2](https://spaj7468-cell.github.io/qkccode/)** — offline coding school
+  (офлайн-школа программирования): 7 courses, 39 lessons on HTML/CSS, JavaScript, Python,
+  Lua (Roblox), GDScript (Godot) and C# (Unity). Every lesson quiz and course exam is assembled
+  by `QKC.init()`; the code tasks run on its own teaching interpreter. Offline PWA, RU/EN.
+  Repo: [`spaj7468-cell/qkccode`](https://github.com/spaj7468-cell/qkccode).
 
 ## License
 
-MIT © 2026 [OuRi Corp](https://spaj7468-cell.github.io/qkc/corp/) — see [LICENSE](./LICENSE).
+MIT © 2026 [OuRi Corp](https://spaj7468-cell.github.io/ouri-corp/) — see [LICENSE](./LICENSE).
 Status: **BETA**. Issues and PRs welcome.
 
