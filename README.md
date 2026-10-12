@@ -144,10 +144,11 @@ npm run build
 
 ### Protocol 02 — How Arakul Studio began
 
-Arakul Studio is a separate OuRi project: a browser-based workspace for text, files, images and 3D-related tasks. Its guiding idea is to bring different creative workflows into one understandable interface. The project approach is to organize tools clearly, try the workflows, and refine confusing parts. Arakul Studio and QKC Engine belong to the same ecosystem but serve different purposes: a creative workspace versus a reusable quiz engine.
+Arakul Studio is a creative workspace in the OuRi ecosystem; **Kraul Engine is its underlying engine**. The studio is the product users interact with, while Kraul is the engine layer intended to power image-processing workflows and expose its own API and technical documentation. Kraul has a separate repository so its architecture, API reference, guides and implementation status can be documented independently. This README does not assume particular API methods or claim that planned processing features are already implemented.
 
 - **Open Arakul Studio:** https://spaj7468-cell.github.io/Arakul/
-- **QKC Engine:** quiz assembly, validation, scoring and an embeddable test widget.
+- **Kraul Engine repository:** https://github.com/spaj7468-cell/Kraul
+- **QKC Engine:** a separate quiz engine for question-bank validation, test assembly, scoring and an embeddable widget.
 
 ## License
 
@@ -162,7 +163,8 @@ QKC Engine is shared infrastructure for the OuRi learning projects:
 - [OuRi Corp — project directory](https://spaj7468-cell.github.io/ouri-corp/)
 - [QKC trainer](https://spaj7468-cell.github.io/qkc/)
 - [QKCcode programming school](https://spaj7468-cell.github.io/qkccode/)
-- [Arakul Studio](https://spaj7468-cell.github.io/Arakul/)
+- [Arakul Studio](https://spaj7468-cell.github.io/Arakul/) — creative workspace powered by Kraul Engine
+- [Kraul Engine](https://github.com/spaj7468-cell/Kraul) — engine/API and technical documentation for image-processing workflows
 - [All GitHub repositories](https://github.com/spaj7468-cell?tab=repositories)
 
-These projects were built at different times and have different goals and maturity levels. Feature depth and quality may vary; no single project is necessarily best at everything.
+These projects were built at different times and have different goals and maturity levels. Kraul Engine is the engine layer associated with Arakul Studio; QKC Engine is a separate quiz engine. Feature depth and implementation status may vary, so documentation should distinguish implemented features from planned work.
