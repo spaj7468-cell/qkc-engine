@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="bw">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,13 +13,8 @@
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='2' width='29' height='29' rx='8' fill='none' stroke='%23fff' stroke-width='2.4'/%3E%3Ctext x='16' y='21' font-family='monospace' font-size='12' fill='%23fff' text-anchor='middle'%3E%7B%7D%3C/text%3E%3C/svg%3E">
 <script>
-  /* apply saved site theme before first paint (no FOUC) */
-  (function () {
-    try {
-      var t = localStorage.getItem('qkc-docs-theme');
-      if (t === 'light' || t === 'bw' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
-    } catch (e) { /* private mode — stay dark */ }
-  })();
+  /* QKC documentation identity is intentionally strict monochrome. */
+  document.documentElement.setAttribute('data-theme', 'bw');
 </script>
 <script defer src="demo-bank.js"></script>
 <script defer src="dist/qkc-engine.js"></script>
