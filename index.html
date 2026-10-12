@@ -1232,6 +1232,7 @@ QKC.rng(seed);                     <i>// seeded PRNG</i></div>
         <div class="card"><h3>repo 1 · qkc-engine</h3><p>The reusable core you are reading about: widget, build/score/validate, seeded RNG, bank schema. Zero dependencies, MIT.</p><span class="sig">github.com/spaj7468-cell/qkc-engine · npm: qkc-engine</span></div>
         <div class="card"><h3>repo 2 · qkc</h3><p>The trainer app: banks, screens, PWA shell, solvers, achievements. Consumes the engine's rules and format — one person + one AI, transparently.</p><span class="sig">github.com/spaj7468-cell/qkc · live: spaj7468-cell.github.io/qkc</span></div>
         <div class="card"><h3>repo 3 · qkccode</h3><p>The coding school: a hand-written teaching interpreter for five languages plus lesson banks the engine turns into quizzes and exams. Offline PWA, monochrome.</p><span class="sig">github.com/spaj7468-cell/qkccode · live: spaj7468-cell.github.io/qkccode</span></div>
+        <div class="card"><h3>Arakul Studio · powered by Kraul</h3><p>Arakul Studio is the creative workspace; Kraul Engine is its engine layer. Kraul is intended for image-processing workflows and has its own repository for architecture, API reference, guides and implementation notes. Specific API signatures and feature availability will be documented from the actual implementation.</p><span class="sig"><a href="https://spaj7468-cell.github.io/Arakul/" rel="noopener">Open Arakul Studio</a> · <a href="https://github.com/spaj7468-cell/Kraul" rel="noopener">Kraul Engine repository</a></span></div>
       </div>
   </section>
 
@@ -1239,10 +1240,10 @@ QKC.rng(seed);                     <i>// seeded PRNG</i></div>
   <section id="protocols">
     <span class="kicker">Choose a protocol</span>
     <h2>What do you want to explore?</h2>
-    <p class="sec-sub">Переключайся между двумя разделами — обычным тестированием и историей создания Arakul Studio.</p>
+    <p class="sec-sub">Переключайся между двумя разделами — протоколом тестирования QKC и архитектурой связки Arakul Studio + Kraul Engine.</p>
     <div class="acts" id="protocolSwitch" role="group" aria-label="Choose a protocol">
       <button class="btn btn--primary" type="button" data-protocol="protocol-standard" aria-pressed="true">01 · Standard test</button>
-      <button class="btn" type="button" data-protocol="arakul-story" aria-pressed="false">02 · Arakul Studio</button>
+      <button class="btn" type="button" data-protocol="arakul-story" aria-pressed="false">02 · Arakul + Kraul</button>
     </div>
   </section>
 
@@ -1267,28 +1268,28 @@ QKC.rng(seed);                     <i>// seeded PRNG</i></div>
   <!-- ═══ 19 ARAKUL STUDIO STORY ═══ -->
   <section id="arakul-story" hidden>
       <span class="kicker">19 · protocol 02 · project story</span>
-      <h2>How Arakul Studio began.</h2>
-      <p class="sec-sub">A second kind of walkthrough: not a quiz, but the story behind a related OuRi project. Arakul Studio is a browser-based workspace for working with text, files, images and 3D-related tasks.</p>
+      <h2>Arakul Studio and Kraul Engine.</h2>
+      <p class="sec-sub">Arakul Studio is the workspace; Kraul Engine is the engine behind it. Kraul has its own repository and is intended to support image-processing workflows, with a dedicated API and substantial technical documentation.</p>
       <div class="cols">
         <div class="card">
-          <h3>01 · The idea</h3>
-          <p>Bring several everyday creative tasks into one clear workspace, instead of making users jump between unrelated pages and tools.</p>
+          <h3>01 · Arakul Studio</h3>
+          <p>The user-facing creative workspace. It brings tools and workflows together in one interface; it is the product layer, not the engine itself.</p>
         </div>
         <div class="card">
-          <h3>02 · The workspace</h3>
-          <p>Shape the project around distinct tools and understandable controls, so users can tell what each tool does before they start using it.</p>
+          <h3>02 · Kraul Engine</h3>
+          <p>The underlying engine project. Its scope includes image-processing workflows such as background removal and foreground isolation, subject to the features actually implemented in the codebase.</p>
         </div>
         <div class="card">
-          <h3>03 · The iteration</h3>
-          <p>Build the interface, try the available workflows, notice confusing parts and refine the experience. This section describes the project approach, not a claim that every feature is automatic or powered by AI.</p>
+          <h3>03 · API and documentation</h3>
+          <p>Kraul has a dedicated place for architecture notes, API reference, guides, examples and limitations. Exact method names, parameters and response shapes must be taken from the implementation rather than guessed.</p>
         </div>
       </div>
       <div class="prod" style="margin-top:14px">
         <div>
-          <h3>Arakul Studio · in the OuRi family</h3>
-          <p>Arakul Studio is a separate project from QKC Engine: QKC focuses on quiz logic and test results, while Arakul Studio focuses on a multi-tool creative workspace. The projects share an ecosystem, but they have different purposes.</p>
+          <h3>Arakul Studio · powered by Kraul Engine</h3>
+          <p>QKC Engine handles quizzes and test results. Kraul Engine is the engine associated with Arakul Studio and is documented separately. The two engine projects have different roles within the OuRi ecosystem.</p>
         </div>
-        <a class="btn btn--primary" href="https://spaj7468-cell.github.io/Arakul/" rel="noopener">Open Arakul Studio →</a>
+        <div class="acts"><a class="btn btn--primary" href="https://spaj7468-cell.github.io/Arakul/" rel="noopener">Open Arakul Studio →</a><a class="btn" href="https://github.com/spaj7468-cell/Kraul" rel="noopener">Kraul Engine repository →</a></div>
       </div>
   </section>
 
@@ -1353,6 +1354,7 @@ QKC.rng(seed);                     <i>// seeded PRNG</i></div>
     <a href="https://spaj7468-cell.github.io/qkccode/">QKCcode</a>
     <a href="https://spaj7468-cell.github.io/qkc-engine/">QKC Engine</a>
     <a href="https://spaj7468-cell.github.io/Arakul/">Arakul Studio</a>
+    <a href="https://github.com/spaj7468-cell/Kraul">Kraul Engine</a>
     <a href="https://github.com/spaj7468-cell" target="_blank" rel="noopener noreferrer">Все репозитории ↗</a>
   </nav>
 </footer>
