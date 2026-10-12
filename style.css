@@ -404,3 +404,7 @@ html[data-theme="bw"] #toTop{ border-radius:0; border-width:2px }
   .rv{ opacity:1; transform:none }
   .dg .ln--flow{ animation:none }
 }
+
+
+/* The QKC documentation site stays strictly monochrome; widget themes are independent. */
+#siteTheme,#siteThemeM,.drawer__tools{display:none!important}
