@@ -24,33 +24,12 @@
   function ready(fn) { if (document.readyState !== 'loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
   function $(id) { return document.getElementById(id); }
 
-  /* ── site theme (dark / light / bw), persisted; header + drawer switches ── */
+  /* ── fixed site identity: strict black/white ─────────────────── */
   function siteTheme() {
-    var boxes = [];
-    var hb = $('siteTheme'), mb = $('siteThemeM');
-    if (hb) boxes.push(hb);
-    if (mb) boxes.push(mb);
-    if (!boxes.length) return;
-    function apply(v, save) {
-      document.documentElement.setAttribute('data-theme', v);
-      boxes.forEach(function (box) {
-        box.querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-v') === v); });
-      });
-      if (save) { try { localStorage.setItem('qkc-docs-theme', v); } catch (e) { /* ignore */ } }
-    }
-    boxes.forEach(function (box) {
-      box.addEventListener('click', function (ev) {
-        var b = ev.target.closest('button[data-v]');
-        if (b) apply(b.getAttribute('data-v'), true);
-      });
-    });
-    try {
-      var saved = localStorage.getItem('qkc-docs-theme');
-      if (saved === 'light' || saved === 'bw' || saved === 'dark') apply(saved, false);
-    } catch (e) { /* ignore */ }
+    document.documentElement.setAttribute('data-theme', 'bw');
   }
 
-  /* ── mobile drawer ─────────────────────────────────────────── */
+    /* ── mobile drawer ─────────────────────────────────────────── */
   function drawer() {
     var btn = $('menuBtn'), d = $('drawer');
     if (!btn || !d) return;
