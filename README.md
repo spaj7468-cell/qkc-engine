@@ -1,6 +1,6 @@
 # QKC Engine
 
-**Dependency-free quiz engine for the web.** Vanilla JS. No build step. MIT. Embed quizzes in any page.
+**Dependency-free quiz engine for the web.** Vanilla JS. No build step. MIT. Embed quizzes in any page. The documentation site uses a strict black-and-white identity; widget themes remain configurable.
 
 [![version](https://img.shields.io/badge/version-1.2.0-black)](https://github.com/spaj7468-cell/qkc-engine/releases)
 [![deps](https://img.shields.io/badge/dependencies-0-black)](https://github.com/spaj7468-cell/qkc-engine/blob/main/package.json)
