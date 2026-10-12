@@ -40,6 +40,8 @@
       <a href="#format">Bank format</a>
       <a href="#architecture">Architecture</a>
       <a href="#recipes">Recipes</a>
+      <a href="#protocol-standard">Protocols</a>
+      <a href="#arakul-story">Arakul story</a>
       <a href="#faq">FAQ</a>
     </nav>
     <div class="nav__tools">
@@ -83,6 +85,8 @@
   <a href="#changelog"><span class="n">15</span> Changelog</a>
   <a href="#license"><span class="n">16</span> License &amp; source</a>
   <a href="#trainer"><span class="n">17</span> Built with QKC</a>
+  <a href="#protocol-standard"><span class="n">18</span> Standard test protocol</a>
+  <a href="#arakul-story"><span class="n">19</span> How Arakul Studio began</a>
 </nav>
 
 <main id="top">
@@ -143,6 +147,8 @@
       <a href="#changelog"><span class="n">15</span> Changelog</a>
       <a href="#license"><span class="n">16</span> License &amp; source</a>
       <a href="#trainer"><span class="n">17</span> Built with QKC</a>
+      <a href="#protocol-standard"><span class="n">18</span> Standard test protocol</a>
+      <a href="#arakul-story"><span class="n">19</span> How Arakul Studio began</a>
     </aside>
 
     <div class="content">
@@ -1226,6 +1232,52 @@ QKC.rng(seed);                     <i>// seeded PRNG</i></div>
         <div class="card"><h3>repo 1 · qkc-engine</h3><p>The reusable core you are reading about: widget, build/score/validate, seeded RNG, bank schema. Zero dependencies, MIT.</p><span class="sig">github.com/spaj7468-cell/qkc-engine · npm: qkc-engine</span></div>
         <div class="card"><h3>repo 2 · qkc</h3><p>The trainer app: banks, screens, PWA shell, solvers, achievements. Consumes the engine's rules and format — one person + one AI, transparently.</p><span class="sig">github.com/spaj7468-cell/qkc · live: spaj7468-cell.github.io/qkc</span></div>
         <div class="card"><h3>repo 3 · qkccode</h3><p>The coding school: a hand-written teaching interpreter for five languages plus lesson banks the engine turns into quizzes and exams. Offline PWA, monochrome.</p><span class="sig">github.com/spaj7468-cell/qkccode · live: spaj7468-cell.github.io/qkccode</span></div>
+      </div>
+  </section>
+
+  <!-- ═══ 18 STANDARD TEST PROTOCOL ═══ -->
+  <section id="protocol-standard">
+      <span class="kicker">18 · protocol 01</span>
+      <h2>Standard test: from question bank to result.</h2>
+      <p class="sec-sub">The ordinary QKC workflow — проверка знаний, контрольная работа или короткий тренировочный тест. The engine assembles the questions, checks answers and returns a score; the host app decides what to do with the result.</p>
+      <div class="steps" aria-label="Standard testing protocol">
+        <div class="step"><div><b>1. Prepare the bank</b><span>Write questions with an answer type, options when needed, the correct answer and an explanation. Keep topics labelled so results can be grouped.</span></div></div>
+        <div class="step"><div><b>2. Validate before starting</b><span>Call <code>QKC.engine(bank).validate()</code> to catch structural problems before learners begin.</span></div></div>
+        <div class="step"><div><b>3. Configure the test</b><span>Use <code>QKC.init()</code> and choose normal, exam or sprint mode, a theme, language and question count. A seed can make the same test reproducible.</span></div></div>
+        <div class="step"><div><b>4. Answer and review</b><span>In normal mode, learners can practise and see explanations. Exam mode supports a more test-like flow; sprint mode adds a countdown.</span></div></div>
+        <div class="step"><div><b>5. Read the result</b><span><code>onFinish(result)</code> provides totals, percentage and per-topic statistics. Save or display those results in your own app if needed.</span></div></div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h3>Short version · RU</h3>
+        <p>Подготовь вопросы → проверь структуру банка → выбери режим → пройди тест → получи результат и разбор. QKC Engine выполняет логику тестирования локально в браузере и не отправляет ответы на сервер.</p>
+      </div>
+  </section>
+
+  <!-- ═══ 19 ARAKUL STUDIO STORY ═══ -->
+  <section id="arakul-story">
+      <span class="kicker">19 · protocol 02 · project story</span>
+      <h2>How Arakul Studio began.</h2>
+      <p class="sec-sub">A second kind of walkthrough: not a quiz, but the story behind a related OuRi project. Arakul Studio is a browser-based workspace for working with text, files, images and 3D-related tasks.</p>
+      <div class="cols">
+        <div class="card">
+          <h3>01 · The idea</h3>
+          <p>Bring several everyday creative tasks into one clear workspace, instead of making users jump between unrelated pages and tools.</p>
+        </div>
+        <div class="card">
+          <h3>02 · The workspace</h3>
+          <p>Shape the project around distinct tools and understandable controls, so users can tell what each tool does before they start using it.</p>
+        </div>
+        <div class="card">
+          <h3>03 · The iteration</h3>
+          <p>Build the interface, try the available workflows, notice confusing parts and refine the experience. This section describes the project approach, not a claim that every feature is automatic or powered by AI.</p>
+        </div>
+      </div>
+      <div class="prod" style="margin-top:14px">
+        <div>
+          <h3>Arakul Studio · in the OuRi family</h3>
+          <p>Arakul Studio is a separate project from QKC Engine: QKC focuses on quiz logic and test results, while Arakul Studio focuses on a multi-tool creative workspace. The projects share an ecosystem, but they have different purposes.</p>
+        </div>
+        <a class="btn btn--primary" href="https://spaj7468-cell.github.io/Arakul/" rel="noopener">Open Arakul Studio →</a>
       </div>
   </section>
 
