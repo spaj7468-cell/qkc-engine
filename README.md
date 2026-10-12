@@ -135,3 +135,15 @@ npm run build
 MIT © 2026 [OuRi Corp](https://spaj7468-cell.github.io/ouri-corp/) — see [LICENSE](./LICENSE).
 Status: **BETA**. Issues and PRs welcome.
 
+
+
+## OuRi project family
+
+QKC Engine is shared infrastructure for the OuRi learning projects:
+- [OuRi Corp — project directory](https://spaj7468-cell.github.io/ouri-corp/)
+- [QKC trainer](https://spaj7468-cell.github.io/qkc/)
+- [QKCcode programming school](https://spaj7468-cell.github.io/qkccode/)
+- [Arakul Studio](https://spaj7468-cell.github.io/Arakul/)
+- [All GitHub repositories](https://github.com/spaj7468-cell?tab=repositories)
+
+These projects were built at different times and have different goals and maturity levels. Feature depth and quality may vary; no single project is necessarily best at everything.
