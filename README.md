@@ -30,6 +30,8 @@ Live docs, API reference, REPL & playground: **https://engine.qkc.runs-on.dev**
 | 10 | architecture — module map, data flow, widget anatomy, call-by-call narrative |
 | 11–13 | recipes · testing & quality · install & npm |
 | 14–17 | FAQ · changelog · license · the trainer built on this engine |
+| 18 | **Standard test protocol** — prepare, validate, run and score a normal test |
+| 19 | **How Arakul Studio began** — project purpose, workspace idea and iteration approach |
 
 ## Quick start
 
@@ -129,6 +131,23 @@ npm run build
   Lua (Roblox), GDScript (Godot) and C# (Unity). Every lesson quiz and course exam is assembled
   by `QKC.init()`; the code tasks run on its own teaching interpreter. Offline PWA, RU/EN.
   Repo: [`spaj7468-cell/qkccode`](https://github.com/spaj7468-cell/qkccode).
+
+## Protocols and project story
+
+### Protocol 01 — Standard test
+
+1. Prepare a question bank with question text, answer type, correct answer and (where useful) explanation.
+2. Validate its structure with `QKC.engine(bank).validate()`.
+3. Start the test with `QKC.init()` and select the mode, language, theme and question count.
+4. Let the learner answer; normal mode is suited to practice, exam mode to a test-like flow, and sprint mode to timed rounds.
+5. Read the result passed to `onFinish(result)`, including the score and per-topic statistics.
+
+### Protocol 02 — How Arakul Studio began
+
+Arakul Studio is a separate OuRi project: a browser-based workspace for text, files, images and 3D-related tasks. Its guiding idea is to bring different creative workflows into one understandable interface. The project approach is to organize tools clearly, try the workflows, and refine confusing parts. Arakul Studio and QKC Engine belong to the same ecosystem but serve different purposes: a creative workspace versus a reusable quiz engine.
+
+- **Open Arakul Studio:** https://spaj7468-cell.github.io/Arakul/
+- **QKC Engine:** quiz assembly, validation, scoring and an embeddable test widget.
 
 ## License
 
