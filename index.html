@@ -1235,6 +1235,17 @@ QKC.rng(seed);                     <i>// seeded PRNG</i></div>
       </div>
   </section>
 
+  <!-- Protocol switcher: show one explanation at a time -->
+  <section id="protocols">
+    <span class="kicker">Choose a protocol</span>
+    <h2>What do you want to explore?</h2>
+    <p class="sec-sub">Переключайся между двумя разделами — обычным тестированием и историей создания Arakul Studio.</p>
+    <div class="acts" id="protocolSwitch" role="group" aria-label="Choose a protocol">
+      <button class="btn btn--primary" type="button" data-protocol="protocol-standard" aria-pressed="true">01 · Standard test</button>
+      <button class="btn" type="button" data-protocol="arakul-story" aria-pressed="false">02 · Arakul Studio</button>
+    </div>
+  </section>
+
   <!-- ═══ 18 STANDARD TEST PROTOCOL ═══ -->
   <section id="protocol-standard">
       <span class="kicker">18 · protocol 01</span>
@@ -1254,7 +1265,7 @@ QKC.rng(seed);                     <i>// seeded PRNG</i></div>
   </section>
 
   <!-- ═══ 19 ARAKUL STUDIO STORY ═══ -->
-  <section id="arakul-story">
+  <section id="arakul-story" hidden>
       <span class="kicker">19 · protocol 02 · project story</span>
       <h2>How Arakul Studio began.</h2>
       <p class="sec-sub">A second kind of walkthrough: not a quiz, but the story behind a related OuRi project. Arakul Studio is a browser-based workspace for working with text, files, images and 3D-related tasks.</p>
@@ -1284,6 +1295,37 @@ QKC.rng(seed);                     <i>// seeded PRNG</i></div>
     </div><!-- /content -->
   </div><!-- /layout -->
 </main>
+
+
+<script>
+(function () {
+  var switcher = document.getElementById('protocolSwitch');
+  if (!switcher) return;
+  var sections = ['protocol-standard', 'arakul-story'];
+  function activate(id) {
+    sections.forEach(function (sectionId) {
+      var section = document.getElementById(sectionId);
+      if (section) section.hidden = sectionId !== id;
+    });
+    switcher.querySelectorAll('[data-protocol]').forEach(function (button) {
+      var active = button.getAttribute('data-protocol') === id;
+      button.setAttribute('aria-pressed', active ? 'true' : 'false');
+      button.classList.toggle('btn--primary', active);
+    });
+  }
+  switcher.addEventListener('click', function (event) {
+    var button = event.target.closest('[data-protocol]');
+    if (button) activate(button.getAttribute('data-protocol'));
+  });
+  activate('protocol-standard');
+})();
+</script>
+<style>
+  #protocol-standard[hidden], #arakul-story[hidden] { display: none !important; }
+  #protocolSwitch { gap: 10px; flex-wrap: wrap; }
+  #protocolSwitch [aria-pressed="true"] { box-shadow: 0 0 0 2px currentColor inset; }
+  #protocolSwitch button:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+</style>
 
 <footer>
   <div class="wrap">
