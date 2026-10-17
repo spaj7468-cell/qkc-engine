@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>QKC Engine — dependency-free JavaScript quiz engine · docs, API, playground</title>
+<link rel="canonical" href="https://spaj7468-cell.github.io/qkc-engine/">
 <meta name="description" content="QKC Engine: vanilla-JS quiz engine with no build step and no dependencies. QKC.init() embeds a themeable quiz widget (normal/exam/sprint, bw/light/dark, RU/EN) in any page. Full API reference, headless build/score, bank schema, live REPL and playground. UMD + ESM, npm, MIT.">
 <meta name="color-scheme" content="dark light">
 <meta property="og:title" content="QKC Engine — dependency-free JavaScript quiz engine">
@@ -19,6 +20,9 @@
 <script defer src="demo-bank.js"></script>
 <script defer src="dist/qkc-engine.js"></script>
 <script defer src="site.js"></script>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 </head>
 <body>
 <div id="progress" aria-hidden="true"></div>
@@ -1363,5 +1367,6 @@ QKC.rng(seed);                     <i>// seeded PRNG</i></div>
   </nav>
 </footer>
 
+<script>if("serviceWorker" in navigator&&location.protocol!=="file:"){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
 </body>
 </html>
