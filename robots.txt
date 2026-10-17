@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://spaj7468-cell.github.io/qkc-engine/sitemap.xml
