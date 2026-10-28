@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>QKC Engine — dependency-free JavaScript quiz engine · docs, API, playground</title>
-<link rel="canonical" href="https://spaj7468-cell.github.io/qkc-engine/">
+<link rel="canonical" href="https://engine.qkc.runs-on.dev/">
 <meta name="description" content="QKC Engine: vanilla-JS quiz engine with no build step and no dependencies. QKC.init() embeds a themeable quiz widget (normal/exam/sprint, bw/light/dark, RU/EN) in any page. Full API reference, headless build/score, bank schema, live REPL and playground. UMD + ESM, npm, MIT.">
 <meta name="color-scheme" content="dark light">
 <meta property="og:title" content="QKC Engine — dependency-free JavaScript quiz engine">
 <meta property="og:description" content="Vanilla JS. No build step. MIT. Embed quizzes in any page: QKC.init() widget + headless build/score API. Docs, REPL, playground.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://spaj7468-cell.github.io/qkc-engine/">
+<meta property="og:url" content="https://engine.qkc.runs-on.dev/">
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='2' width='29' height='29' rx='8' fill='none' stroke='%23fff' stroke-width='2.4'/%3E%3Ctext x='16' y='21' font-family='monospace' font-size='12' fill='%23fff' text-anchor='middle'%3E%7B%7D%3C/text%3E%3C/svg%3E">
 <script>
@@ -171,7 +171,7 @@
         <div class="pane">
           <h3>index.html</h3>
           <div class="code" id="code-quick"><i>&lt;!-- 1. the engine (UMD, 8.8 KB gzip) --&gt;</i>
-&lt;<b>script</b> src="https://spaj7468-cell.github.io/qkc-engine/engine.js"&gt;&lt;/<b>script</b>&gt;
+&lt;<b>script</b> src="https://engine.qkc.runs-on.dev/engine.js"&gt;&lt;/<b>script</b>&gt;
 <i>&lt;!-- CDN mirror: https://cdn.jsdelivr.net/gh/spaj7468-cell/qkc-engine@main/dist/qkc-engine.js --&gt;</i>
 <i>&lt;!-- after the runs-on.dev claim merges this also works: https://engine.qkc.runs-on.dev/engine.js --&gt;</i>
 
@@ -735,7 +735,7 @@ QKC.validate(csvToBank(text)); <i>// audit first!</i></div>
       </div>
       <div class="tabpanes">
         <div class="code" id="tab-html"><i>&lt;!-- no bundler, no npm, no config --&gt;</i>
-&lt;<b>script</b> src="https://spaj7468-cell.github.io/qkc-engine/engine.js"&gt;&lt;/<b>script</b>&gt;
+&lt;<b>script</b> src="https://engine.qkc.runs-on.dev/engine.js"&gt;&lt;/<b>script</b>&gt;
 &lt;<b>div</b> id="quiz"&gt;&lt;/<b>div</b>&gt;
 &lt;<b>script</b>&gt;
   <b>const</b> quiz = QKC.<b>init</b>({
@@ -951,7 +951,7 @@ console.log(res.pct + '%', res.perTopic);
 build.mjs          <i>wraps src → UMD + ESM (no transpile)</i>
 dist/qkc-engine.js   <i>UMD build, committed</i>
 dist/qkc-engine.mjs  <i>ESM build, committed</i>
-engine.js          <i>root UMD copy → https://spaj7468-cell.github.io/qkc-engine/engine.js</i>
+engine.js          <i>root UMD copy → https://engine.qkc.runs-on.dev/engine.js</i>
 index.html         <i>this docs site</i>
 style.css          <i>docs styles (3 themes)</i>
 site.js            <i>docs wiring — runs the real dist</i>
@@ -1089,8 +1089,8 @@ console.log('bank OK:', QKC.toArray(bank).length, 'items');</div>
       <div class="tbl-wrap" style="margin-top:18px"><table>
         <thead><tr><th>entry point</th><th>format</th><th>status</th><th>url</th></tr></thead>
         <tbody>
-          <tr><td>GitHub Pages mirror</td><td>UMD (<code>&lt;script&gt;</code>)</td><td><b>works now</b></td><td><code>https://spaj7468-cell.github.io/qkc-engine/engine.js</code></td></tr>
-          <tr><td>GitHub Pages mirror</td><td>ESM (<code>import</code>)</td><td><b>works now</b></td><td><code>https://spaj7468-cell.github.io/qkc-engine/dist/qkc-engine.mjs</code></td></tr>
+          <tr><td>GitHub Pages mirror</td><td>UMD (<code>&lt;script&gt;</code>)</td><td><b>works now</b></td><td><code>https://engine.qkc.runs-on.dev/engine.js</code></td></tr>
+          <tr><td>GitHub Pages mirror</td><td>ESM (<code>import</code>)</td><td><b>works now</b></td><td><code>https://engine.qkc.runs-on.dev/dist/qkc-engine.mjs</code></td></tr>
           <tr><td>jsDelivr CDN</td><td>UMD</td><td><b>works now</b></td><td><code>https://cdn.jsdelivr.net/gh/spaj7468-cell/qkc-engine@main/dist/qkc-engine.js</code></td></tr>
           <tr><td>git install</td><td>UMD + ESM</td><td><b>works now</b></td><td><code>npm i github:spaj7468-cell/qkc-engine</code></td></tr>
           <tr><td>engine.qkc.runs-on.dev</td><td>UMD</td><td>after the runs-on.dev claim merges (PR #310)</td><td><code>https://engine.qkc.runs-on.dev/engine.js</code></td></tr>
@@ -1106,9 +1106,9 @@ console.log('bank OK:', QKC.toArray(bank).length, 'items');</div>
 
 <i># WORKING TODAY — two entry points, zero npm:</i>
 <i># 1) UMD, classic script tag (GitHub Pages mirror):</i>
-&lt;<b>script</b> src="https://spaj7468-cell.github.io/qkc-engine/engine.js"&gt;&lt;/<b>script</b>&gt;
+&lt;<b>script</b> src="https://engine.qkc.runs-on.dev/engine.js"&gt;&lt;/<b>script</b>&gt;
 <i># 2) ESM, module import:</i>
-<b>import</b> QKC from 'https://spaj7468-cell.github.io/qkc-engine/dist/qkc-engine.mjs';
+<b>import</b> QKC from 'https://engine.qkc.runs-on.dev/dist/qkc-engine.mjs';
 
 <i># CDN mirrors (same bytes):</i>
 &lt;<b>script</b> src="https://cdn.jsdelivr.net/gh/spaj7468-cell/qkc-engine@main/dist/qkc-engine.js"&gt;&lt;/<b>script</b>&gt;
@@ -1117,7 +1117,7 @@ console.log('bank OK:', QKC.toArray(bank).length, 'items');</div>
 <i># future short domain (runs-on.dev claim, PR #310 — pending merge):</i>
 <i># https://engine.qkc.runs-on.dev/engine.js</i>
 <i># mirror that works right now:</i>
-&lt;<b>script</b> src="https://spaj7468-cell.github.io/qkc-engine/dist/qkc-engine.js"&gt;&lt;/<b>script</b>&gt;</div>
+&lt;<b>script</b> src="https://engine.qkc.runs-on.dev/dist/qkc-engine.js"&gt;&lt;/<b>script</b>&gt;</div>
           <button class="copy" data-copy="code-npm" type="button">copy</button>
         </div>
         <div>
@@ -1209,7 +1209,7 @@ QKC.rng(seed);                     <i>// seeded PRNG</i></div>
       </div>
       <div class="cols" style="margin-top:22px">
         <div class="card"><h3>Contribute</h3><p>Banks are data — PR a JSON array. Engine changes: keep zero dependencies, keep the tests green (<code>npm test</code>), keep semver honest. Issues welcome, even “the docs confused me” ones — especially those.</p><span class="sig">github.com/spaj7468-cell/qkc-engine/issues</span></div>
-        <div class="card"><h3>About this domain</h3><p><b>engine.qkc.runs-on.dev</b> is a subdomain of the project's <a href="https://runs-on.dev" rel="noopener">runs-on.dev</a> claim — an open registry of free subdomains where ownership and DNS records are public. Claim PR: <a href="https://github.com/zordhalo/runs-on.dev/pull/310" rel="noopener">zordhalo/runs-on.dev#310</a>; the CNAME points at GitHub Pages. Live mirror while pending: <a href="https://spaj7468-cell.github.io/qkc-engine/" rel="noopener">spaj7468-cell.github.io/qkc-engine</a>.</p><span class="sig">built with JavaScript — zero dependencies, hand-written ES5 core</span></div>
+        <div class="card"><h3>About this domain</h3><p><b>engine.qkc.runs-on.dev</b> is a subdomain of the project's <a href="https://runs-on.dev" rel="noopener">runs-on.dev</a> claim — an open registry of free subdomains where ownership and DNS records are public. Claim PR: <a href="https://github.com/zordhalo/runs-on.dev/pull/310" rel="noopener">zordhalo/runs-on.dev#310</a>; the CNAME points at GitHub Pages. Live mirror while pending: <a href="https://engine.qkc.runs-on.dev/" rel="noopener">spaj7468-cell.github.io/qkc-engine</a>.</p><span class="sig">built with JavaScript — zero dependencies, hand-written ES5 core</span></div>
       </div>
   </section>
 
@@ -1224,7 +1224,7 @@ QKC.rng(seed);                     <i>// seeded PRNG</i></div>
             42 823 questions · grades K–11 · 20 subjects · strictly per-quarter banks · offline PWA · RU/EN.
             This site is about the engine; the trainer is what the engine becomes with 40K questions behind it.</p>
         </div>
-        <a class="btn btn--primary" href="https://spaj7468-cell.github.io/qkc/" rel="noopener">Open the trainer →</a>
+        <a class="btn btn--primary" href="https://qkc.runs-on.dev/" rel="noopener">Open the trainer →</a>
       </div>
       <div class="prod" style="margin-top:14px">
         <div>
@@ -1234,7 +1234,7 @@ QKC.rng(seed);                     <i>// seeded PRNG</i></div>
             Python, Lua (Roblox), GDScript (Godot) and C# (Unity). Every lesson quiz and course exam is assembled
             by <code>QKC.init()</code> right in the browser — the engine's second home.</p>
         </div>
-        <a class="btn btn--primary" href="https://spaj7468-cell.github.io/qkccode/" rel="noopener">Open QKCcode →</a>
+        <a class="btn btn--primary" href="https://code.qkc.runs-on.dev/" rel="noopener">Open QKCcode →</a>
       </div>
       <div class="cols" style="margin-top:14px">
         <div class="card"><h3>repo 1 · qkc-engine</h3><p>The reusable core you are reading about: widget, build/score/validate, seeded RNG, bank schema. Zero dependencies, MIT.</p><span class="sig">github.com/spaj7468-cell/qkc-engine · npm: qkc-engine</span></div>
@@ -1339,7 +1339,7 @@ QKC.rng(seed);                     <i>// seeded PRNG</i></div>
 <footer>
   <div class="wrap">
     <span>© 2026 OuRi Corp · QKC Engine v1.2.0 · built with JavaScript · MIT license · BETA · no trackers, no cookies</span>
-    <span class="mono"><a href="https://github.com/spaj7468-cell/qkc-engine">source</a> · <a href="https://github.com/spaj7468-cell/qkc-engine/blob/main/CHANGELOG.md">changelog</a> · <a href="https://github.com/spaj7468-cell/qkc-engine/issues">issues</a> · <a href="https://spaj7468-cell.github.io/qkc/">trainer</a> · <a href="https://spaj7468-cell.github.io/ouri-corp/">OuRi Corp</a></span>
+    <span class="mono"><a href="https://github.com/spaj7468-cell/qkc-engine">source</a> · <a href="https://github.com/spaj7468-cell/qkc-engine/blob/main/CHANGELOG.md">changelog</a> · <a href="https://github.com/spaj7468-cell/qkc-engine/issues">issues</a> · <a href="https://qkc.runs-on.dev/">trainer</a> · <a href="https://corp.qkc.runs-on.dev/">OuRi Corp</a></span>
   </div>
 </footer>
 
@@ -1357,10 +1357,10 @@ QKC.rng(seed);                     <i>// seeded PRNG</i></div>
   </style>
   <div class="ouri-network__top"><span class="ouri-network__title">OuRi · единая экосистема</span><span class="ouri-network__sub">Связанные продукты и исходный код</span></div>
   <nav class="ouri-network__links" aria-label="Другие проекты OuRi">
-    <a href="https://spaj7468-cell.github.io/ouri-corp/">OuRi Corp</a>
-    <a href="https://spaj7468-cell.github.io/qkc/">QKC</a>
-    <a href="https://spaj7468-cell.github.io/qkccode/">QKCcode</a>
-    <a href="https://spaj7468-cell.github.io/qkc-engine/">QKC Engine</a>
+    <a href="https://corp.qkc.runs-on.dev/">OuRi Corp</a>
+    <a href="https://qkc.runs-on.dev/">QKC</a>
+    <a href="https://code.qkc.runs-on.dev/">QKCcode</a>
+    <a href="https://engine.qkc.runs-on.dev/">QKC Engine</a>
     <a href="https://spaj7468-cell.github.io/Arakul/">Arakul Studio</a>
     <a href="https://github.com/spaj7468-cell/Kraul">Kraul Engine</a>
     <a href="https://github.com/spaj7468-cell" target="_blank" rel="noopener noreferrer">Все репозитории ↗</a>
