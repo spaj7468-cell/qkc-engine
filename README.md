@@ -6,8 +6,8 @@
 [![deps](https://img.shields.io/badge/dependencies-0-black)](https://github.com/spaj7468-cell/qkc-engine/blob/main/package.json)
 [![license](https://img.shields.io/badge/license-MIT-black)](./LICENSE)
 
-`qkc-engine` is the open core of the [QKC trainer](https://spaj7468-cell.github.io/qkc/) and the
-[QKCcode](https://spaj7468-cell.github.io/qkccode/) coding school. Two layers, one file:
+`qkc-engine` is the open core of the [QKC trainer](https://qkc.runs-on.dev/) and the
+[QKCcode](https://code.qkc.runs-on.dev/) coding school. Two layers, one file:
 
 1. **Headless core** — seeded, reproducible quiz assembly and scoring over strictly partitioned
    question banks (`grade → subject → quarter → topic`).
@@ -17,7 +17,7 @@
 
 Live docs, API reference, REPL & playground: **https://engine.qkc.runs-on.dev**
 (claim pending — [zordhalo/runs-on.dev#310](https://github.com/zordhalo/runs-on.dev/pull/310)) ·
-**[mirror, works now](https://spaj7468-cell.github.io/qkc-engine/)**
+**[mirror, works now](https://engine.qkc.runs-on.dev/)**
 
 ### Docs map (on the site)
 
@@ -37,7 +37,7 @@ Live docs, API reference, REPL & playground: **https://engine.qkc.runs-on.dev**
 
 ```html
 <!-- works today (GitHub Pages); after the runs-on.dev claim merges: https://engine.qkc.runs-on.dev/engine.js -->
-<script src="https://spaj7468-cell.github.io/qkc-engine/engine.js"></script>
+<script src="https://engine.qkc.runs-on.dev/engine.js"></script>
 <div id="quiz"></div>
 <script>
   QKC.init({ bank: window.OURI_BANKS[7].algebra[1] });
@@ -107,7 +107,7 @@ Everything is pure and synchronous: **same seed → same test**, down to option 
 src/core.js        the engine (single source of truth, ES5-compatible)
 build.mjs          wraps src into dist/qkc-engine.js (UMD) + dist/qkc-engine.mjs (ESM)
 dist/              committed builds — consumers need no build step
-engine.js          root copy of the UMD build → https://spaj7468-cell.github.io/qkc-engine/engine.js
+engine.js          root copy of the UMD build → https://engine.qkc.runs-on.dev/engine.js
                      (short domain https://engine.qkc.runs-on.dev/engine.js — after runs-on.dev PR #310 merges)
 index.html         this docs site (live demo, playground, guides) — plain HTML/CSS/JS
 site.js            docs-site wiring (runs the real dist build)
@@ -123,10 +123,10 @@ npm run build
 
 ## Made with this engine
 
-- **[QKC — Quick Knowledge Check](https://spaj7468-cell.github.io/qkc/)** — school quiz trainer
+- **[QKC — Quick Knowledge Check](https://qkc.runs-on.dev/)** — school quiz trainer
   (учебный тренажёр, построенный на этом движке): grades K–11, 20 subjects, 42 823 questions,
   offline PWA, RU/EN. Repo: [`spaj7468-cell/qkc`](https://github.com/spaj7468-cell/qkc).
-- **[QKCcode — QKC v2](https://spaj7468-cell.github.io/qkccode/)** — offline coding school
+- **[QKCcode — QKC v2](https://code.qkc.runs-on.dev/)** — offline coding school
   (офлайн-школа программирования): 7 courses, 39 lessons on HTML/CSS, JavaScript, Python,
   Lua (Roblox), GDScript (Godot) and C# (Unity). Every lesson quiz and course exam is assembled
   by `QKC.init()`; the code tasks run on its own teaching interpreter. Offline PWA, RU/EN.
@@ -152,7 +152,7 @@ Arakul Studio is a creative workspace in the OuRi ecosystem; **Kraul Engine is i
 
 ## License
 
-MIT © 2026 [OuRi Corp](https://spaj7468-cell.github.io/ouri-corp/) — see [LICENSE](./LICENSE).
+MIT © 2026 [OuRi Corp](https://corp.qkc.runs-on.dev/) — see [LICENSE](./LICENSE).
 Status: **BETA**. Issues and PRs welcome.
 
 
@@ -160,9 +160,9 @@ Status: **BETA**. Issues and PRs welcome.
 ## OuRi project family
 
 QKC Engine is shared infrastructure for the OuRi learning projects:
-- [OuRi Corp — project directory](https://spaj7468-cell.github.io/ouri-corp/)
-- [QKC trainer](https://spaj7468-cell.github.io/qkc/)
-- [QKCcode programming school](https://spaj7468-cell.github.io/qkccode/)
+- [OuRi Corp — project directory](https://corp.qkc.runs-on.dev/)
+- [QKC trainer](https://qkc.runs-on.dev/)
+- [QKCcode programming school](https://code.qkc.runs-on.dev/)
 - [Arakul Studio](https://spaj7468-cell.github.io/Arakul/) — creative workspace powered by Kraul Engine
 - [Kraul Engine](https://github.com/spaj7468-cell/Kraul) — engine/API and technical documentation for image-processing workflows
 - [All GitHub repositories](https://github.com/spaj7468-cell?tab=repositories)
