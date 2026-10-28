@@ -420,7 +420,7 @@
       try { bank = parseBank(); } catch (e) { setOut(e.message, 'err'); return; }
       var v = QKC.validate(bank);
       if (!v.ok) { setOut(v.errors.slice(0, 3).join('\n'), 'err'); return; }
-      var html = '<script src="https://spaj7468-cell.github.io/qkc-engine/engine.js"><\/script>\n' +
+      var html = '<script src="https://engine.qkc.runs-on.dev/engine.js"><\/script>\n' +
         '<div id="quiz"></div>\n' +
         '<script>\n' +
         'const bank = ' + JSON.stringify(bank, null, 2) + ';\n' +
