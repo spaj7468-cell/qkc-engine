@@ -168,3 +168,10 @@ QKC Engine is shared infrastructure for the OuRi learning projects:
 - [All GitHub repositories](https://github.com/spaj7468-cell?tab=repositories)
 
 These projects were built at different times and have different goals and maturity levels. Kraul Engine is the engine layer associated with Arakul Studio; QKC Engine is a separate quiz engine. Feature depth and implementation status may vary, so documentation should distinguish implemented features from planned work.
+
+## Авторы
+
+| Роль | Автор | Профиль |
+|------|-------|---------|
+| Автор | **telrino** | <https://vk.ru/telrino> |
+| Соавтор | **Бро** | <https://vk.ru/id920684081> |
